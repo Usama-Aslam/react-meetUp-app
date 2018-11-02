@@ -1,0 +1,26 @@
+#LoginPanel{
+ display: flex;
+  height: 300px;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.LoginDiv{
+    width:450px;
+    padding: 30px;
+}
+#LoginPanel:nth-child(1){
+    font-size:24px;
+}
+.loginBtn{
+    justify-content: center;
+    align-items: center;
+}
+#beverageList{
+    display: flex;
+    flex-direction: row;
+}
+.beveragesCard{
+    flex:1;
+    margin:0 2%;
+}

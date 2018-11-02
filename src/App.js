@@ -1,25 +1,38 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import Login from './Screens/Login/Login';
+import Profile from './Screens/Profile/Profile';
+// import * as firebase from 'firebase'
+import firebase from './Config/firebase'
+import Routes from "./Config/Router/router";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+
 
 class App extends Component {
+  constructor() {
+    super()
+    this.state = {
+      loginFlag: false,
+      isAvailable: false
+
+    }
+    this.showProfile = this.showProfile.bind(this);
+  }
+
+  showProfile() {
+    this.setState({
+      loginFlag: true
+    })
+  }
+
   render() {
+    const { loginFlag } = this.state
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+        {/* {!loginFlag && <Login showProfile={this.showProfile} />}
+        {loginFlag && <Profile />} */}
+        <Routes loginFlag={loginFlag} />
       </div>
     );
   }
