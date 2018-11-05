@@ -32,6 +32,9 @@ import FileUploader from "react-firebase-file-uploader";
 
 import firebase from "../../Config/firebase"
 
+import Steps1 from "./Step1/index"
+import Steps2 from "./Step2/index"
+
 const styles = theme => ({
     root: {
         width: '90%',
@@ -63,78 +66,20 @@ class Profile extends Component {
         this.state = {
             activeStep: 0,
             checked: [{ check: [0] }, { check: [1] }, { check: [2] }],
-            images: [coffee, juice, cocktail],
-            nickName: null,
-            phone: null,
+            img: [coffee, juice, cocktail],
+            currentFileNumber: null,
             obj: {
                 nickName: null,
                 phone: null,
                 avatar: null,
-                images: [{
-                    avatarURL1: null,
-                    avatarURL2: null,
-                    avatarURL3: null,
-                }],
+                images: [{ avatarURL: null }, { avatarURL: null }, { avatarURL: null }],
                 location: [],
                 bev: [],
                 duration: []
             },
-            // fileName: [{ name: null }, { name: null }, { name: null }]
-            isUploading: false,
-            progress: 0
-
         }
         this.updateText = this.updateText.bind(this)
-        // this.updateFileName = this.updateFileName.bind(this)
-    }
-
-    // componentDidMount() {
-    //     firebase.database().ref("/").on("child_added", data => {
-    //         this.setState({ isAvailable: true })
-    //     })
-    // }
-
-    handleUploadStart = () => {
-        this.setState({ isUploading: true, progress: 0 });
-        // Toast({
-        //     type: 'info',
-        //     title: 'Upload is start'
-        // })
-    };
-
-    handleProgress = progress => {
-        this.setState({ progress });
-        // Toast({
-        //     type: progress === 100 ? 'success' : 'info',
-        //     title: progress === 100 ? 'Upload Complete' : `Uploaded: ${progress}%`
-        // })
-    };
-
-    handleUploadError = error => {
-        this.setState({ isUploading: false });
-        console.error(error);
-        // Toast({
-        //     type: 'error',
-        //     title: `Error: ${error}`
-        // })
-    };
-
-    componentDidUpdate() {
-        const { getImagesURL, handleChangeState } = this.props;
-        let { avatarURL1, avatarURL2, avatarURL3 } = this.state.obj.images;
-
-        if (avatarURL1 && avatarURL2 && avatarURL3) {
-            let imgUrls = [avatarURL1, avatarURL2, avatarURL3]
-            getImagesURL(imgUrls)
-            handleChangeState(2)
-        }
-        //  else {
-        //     handleChangeState(1)
-        //     // Toast({
-        //     //     type: "warning",
-        //     //     title: "Please select all (3) images"
-        //     // })
-        // }
+        this.updateImageUrl = this.updateImageUrl.bind(this)
     }
 
     handleNext = () => {
@@ -179,105 +124,56 @@ class Profile extends Component {
     };
 
     updateText(e, id) {
-        console.log(id)
+        let { nickName, phone } = this.state.obj;
+
         if (id == 'standard-name') {
+            nickName = e.target.value
             this.setState({
-                nickName: e.target.value
+                obj: { ...this.state.obj, nickName }
             })
         }
         else {
+            phone = +e.target.value;
             this.setState({
-                phone: e.target.value
+                obj: { ...this.state.obj, phone }
             })
         }
     }
 
-
+    updateImageUrl(downloadURL, fileN) {
+        const { images } = this.state.obj
+        images[fileN].avatarURL = downloadURL
+        this.setState({
+            images
+        })
+    }
 
     getStepContent(step) {
         const { classes } = this.props;
-        const { checked, images, phone, nickName, fileName } = this.state
+        const { checked, img, phone, nickName, fileName, obj } = this.state;
+
 
         switch (step) {
             case 0:
                 return (
-                    <form noValidate autoComplete="off" >
-                        <TextField
-                            id="standard-name"
-                            label="Nick Name"
-                            margin="normal"
-                            className={classes.textField}
-                            required
-                            onChange={(e) => this.updateText(e, e.target.id)}
-                        />
-                        <TextField
-                            id="standard-phoneNumber"
-                            label="Phone Number"
-                            type="number"
-                            className={classes.textField}
-                            margin="normal"
-                            onChange={(e) => this.updateText(e, e.target.id)}
-                        />
-                    </form>
+                    <Steps1 updateText={this.updateText} />
                 );
             case 1:
                 return (
-                    <form noValidate autoComplete="off">
-                        <label htmlFor="contained-button-file">
-                            <Button variant="contained" component="span" className={classes.button}>
-                                <FileUploader
-                                    accept="image/*"
-                                    name="avatar"
-                                    randomizeFilename
-                                    storageRef={firebase.storage().ref("images")}
-                                    onUploadStart={this.handleUploadStart}
-                                    onUploadError={this.handleUploadError}
-                                    onUploadSuccess={this.handleUploadSuccess}
-                                    onProgress={this.handleProgress}
-                                />
-                            </Button>
-                        </label>
-                        <label htmlFor="contained-button-file">
-                            <Button variant="contained" component="span" className={classes.button}>
-                                <FileUploader
-                                    accept="image/*"
-                                    name="avatar"
-                                    randomizeFilename
-                                    storageRef={firebase.storage().ref("images")}
-                                    onUploadStart={this.handleUploadStart}
-                                    onUploadError={this.handleUploadError}
-                                    onUploadSuccess={this.handleUploadSuccess}
-                                    onProgress={this.handleProgress}
-                                />
-                            </Button>
-                        </label>
-                        <label htmlFor="contained-button-file">
-                            <Button variant="contained" component="span" className={classes.button}>
-                                <FileUploader
-                                    accept="image/*"
-                                    name="avatar"
-                                    randomizeFilename
-                                    storageRef={firebase.storage().ref("images")}
-                                    onUploadStart={this.handleUploadStart}
-                                    onUploadError={this.handleUploadError}
-                                    onUploadSuccess={this.handleUploadSuccess}
-                                    onProgress={this.handleProgress}
-                                />
-                            </Button>
-                        </label>
-                    </form>);
+                    <Steps2 obj={obj} updateImageUrl={this.updateImageUrl} />
+                );
             case 2:
                 return (
                     <div id="beverageList">
                         {checked.map((outerValue, outerIndex) => {
                             return (
-                                <Card className="beveragesCard">
+                                <Card key={outerIndex} className="beveragesCard">
                                     <CardMedia
                                         component="img"
                                         alt="Contemplative Reptile"
                                         className="beveragesImage"
                                         height="140"
-                                        image={images[outerIndex]}
+                                        image={img[outerIndex]}
                                         title="Contemplative Reptile"
                                     />
                                     <List>
@@ -325,7 +221,9 @@ class Profile extends Component {
         const { classes } = this.props;
         const steps = this.getSteps();
         const { activeStep } = this.state;
-        console.log(this.props)
+
+        console.log("profile images---", this.state.obj.images)
+
         return (
             <div className={classes.root}>
                 <Stepper activeStep={activeStep} orientation="vertical">
