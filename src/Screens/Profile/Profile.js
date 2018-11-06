@@ -18,8 +18,6 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 
-import TextField from '@material-ui/core/TextField';
-
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
@@ -34,10 +32,11 @@ import firebase from "../../Config/firebase"
 
 import Steps1 from "./Step1/index"
 import Steps2 from "./Step2/index"
+import Steps3 from "./Step3/index"
 
 const styles = theme => ({
     root: {
-        width: '90%',
+        width: '100%',
     },
     button: {
         marginTop: theme.spacing.unit,
@@ -65,7 +64,7 @@ class Profile extends Component {
         super();
         this.state = {
             activeStep: 0,
-            checked: [{ check: [0] }, { check: [1] }, { check: [2] }],
+            // checked: [{ check: [0] }, { check: [0] }, { check: [0] }],
             img: [coffee, juice, cocktail],
             currentFileNumber: null,
             obj: {
@@ -75,11 +74,14 @@ class Profile extends Component {
                 images: [{ avatarURL: null }, { avatarURL: null }, { avatarURL: null }],
                 location: [],
                 bev: [],
-                duration: []
+                durations: [],
             },
         }
         this.updateText = this.updateText.bind(this)
         this.updateImageUrl = this.updateImageUrl.bind(this)
+        this.updateDuration = this.updateDuration.bind(this)
+        this.updateBeverage = this.updateBeverage.bind(this)
+        this.removeBeverage = this.removeBeverage.bind(this)
     }
 
     handleNext = () => {
@@ -104,24 +106,36 @@ class Profile extends Component {
         return ['Enter Your Credentials', 'Upload Your Photos', 'Select Beverages', 'Current Map'];
     }
 
-    handleToggle = (value, index) => () => {
-        const { checked } = this.state;
-        const currentIndex = checked[index].check.indexOf(value);
-        const newChecked = [...checked];
-        console.log(currentIndex)
-        console.log("new checked", newChecked)
-        if (currentIndex === -1) {
-            newChecked[index].check.push(value);
-            console.log("if new check", newChecked)
-        }
-        else {
-            newChecked[index].check.splice(currentIndex, 1);
-            console.log("else check", newChecked)
-        }
+    updateDuration(e) {
+        const { obj } = this.state;
+        const { durations } = obj
+
         this.setState({
-            checked: newChecked,
-        });
-    };
+            obj: { ...obj, durations: [...e.target.value] }
+        })
+    }
+
+    updateBeverage(element) {
+        let { bev } = this.state.obj
+
+        bev.push(element)
+
+        this.setState({
+            bev
+        })
+        console.log(bev)
+    }
+
+    removeBeverage(element) {
+        let { bev } = this.state.obj
+
+        bev.splice(bev.indexOf(element), 1)
+
+        this.setState({
+            bev
+        })
+        console.log(bev)
+    }
 
     updateText(e, id) {
         let { nickName, phone } = this.state.obj;
@@ -143,6 +157,7 @@ class Profile extends Component {
     updateImageUrl(downloadURL, fileN) {
         const { images } = this.state.obj
         images[fileN].avatarURL = downloadURL
+
         this.setState({
             images
         })
@@ -165,19 +180,19 @@ class Profile extends Component {
             case 2:
                 return (
                     <div id="beverageList">
-                        {checked.map((outerValue, outerIndex) => {
+                        <Steps3 obj={obj} updateDuration={this.updateDuration} updateBeverage={this.updateBeverage} removeBeverage={this.removeBeverage} />
+                        {/* {checked.map((outerValue, outerIndex) => {
                             return (
+                              
                                 <Card key={outerIndex} className="beveragesCard">
                                     <CardMedia
                                         component="img"
-                                        alt="Contemplative Reptile"
                                         className="beveragesImage"
-                                        height="140"
+                                        height="150"
                                         image={img[outerIndex]}
-                                        title="Contemplative Reptile"
                                     />
                                     <List>
-                                        {[20, 40, 60, 120].map((innerValue, innerIndex) => {
+                                        {[20, 40, 120].map((innerValue, innerIndex) => {
                                             return (
                                                 <ListItem
                                                     key={innerValue}
@@ -193,9 +208,6 @@ class Profile extends Component {
                                                         disableRipple
                                                     />
 
-                                                    {/* {console.log("checked index", checked[outerIndex])} */}
-
-
                                                     <ListItemText primary={`Duration ${innerValue}`} />
                                                     <ListItemSecondaryAction>
                                                         <IconButton aria-label="Comments">
@@ -205,8 +217,9 @@ class Profile extends Component {
                                             )
                                         })}
                                     </List>
-                                </Card>)
-                        })}
+                                </Card>
+                            )
+                        })} */}
                     </div>
                 );
             case 3:
@@ -223,6 +236,7 @@ class Profile extends Component {
         const { activeStep } = this.state;
 
         console.log("profile images---", this.state.obj.images)
+        console.log("dur---", this.state.obj.durations)
 
         return (
             <div className={classes.root}>
