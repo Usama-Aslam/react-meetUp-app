@@ -16,6 +16,10 @@ import firebase from './../../Config/firebase';
 import '../Login/style.css';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
+//redux
+import { connect } from "react-redux";
+import { updateUser } from "../../Config/Redux/Action/authAction"
+
 class Login extends Component {
     constructor() {
         super();
@@ -23,7 +27,7 @@ class Login extends Component {
 
     login() {
         var provider = new firebase.auth.FacebookAuthProvider();
-        const { showProfile } = this.props
+        // const { showProfile } = this.props for conditional display
         provider.setCustomParameters({
             'display': 'popup'
         });
@@ -34,12 +38,13 @@ class Login extends Component {
             var user = result.user.toJSON();
             console.log(user)
 
-            if (user.lastLoginAt === user.createdAt) {
+            // if (user.lastLoginAt === user.createdAt) {
 
-            }
+            // }
             // ...
         })
-            .then(() => {
+            .then((user) => {
+                this.props.updateUser(user.toJSON())
                 this.props.history.push("/profile")
             })
             .catch(function (error) {
@@ -78,4 +83,15 @@ class Login extends Component {
     };
 }
 
-export default Login;
+const mapStateToProps = (state) => {
+    return {
+        user: state.authReducer.user
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        updateUser: (user) => dispatch(updateUser(user))
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

@@ -4,6 +4,7 @@ import juice from "./../../Assets/Images/juice.jpg"
 import cocktail from "./../../Assets/Images/cocktail.jpg"
 
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -33,10 +34,25 @@ import firebase from "../../Config/firebase"
 import Steps1 from "./Step1/index"
 import Steps2 from "./Step2/index"
 import Steps3 from "./Step3/index"
+import Steps4 from "./Step4/index"
+
+import { createMuiTheme } from '@material-ui/core/styles';
+import green from '@material-ui/core/colors/green';
+
+//redux connect
+import { connect } from 'react-redux'
+import { updateUser } from './../../Config/Redux/Action/authAction'
 
 const styles = theme => ({
     root: {
         width: '100%',
+    },
+    cssRoot: {
+        color: theme.palette.getContrastText(green[800]),
+        backgroundColor: green[500],
+        '&:hover': {
+            backgroundColor: green[700],
+        },
     },
     button: {
         marginTop: theme.spacing.unit,
@@ -72,7 +88,7 @@ class Profile extends Component {
                 phone: null,
                 avatar: null,
                 images: [{ avatarURL: null }, { avatarURL: null }, { avatarURL: null }],
-                location: [],
+                location: { lng: null, lat: null },
                 bev: [],
                 durations: [],
             },
@@ -82,6 +98,12 @@ class Profile extends Component {
         this.updateDuration = this.updateDuration.bind(this)
         this.updateBeverage = this.updateBeverage.bind(this)
         this.removeBeverage = this.removeBeverage.bind(this)
+        this.getCurrentLocation = this.getCurrentLocation.bind(this)
+
+    }
+
+    componentDidMount() {
+
     }
 
     handleNext = () => {
@@ -103,9 +125,9 @@ class Profile extends Component {
     };
 
     getSteps() {
-        return ['Enter Your Credentials', 'Upload Your Photos', 'Select Beverages', 'Current Map'];
+        return ['Enter Your Credentials', 'Upload Your Photos', 'Select Beverages', 'Current '];
     }
-
+    //step3 duration and drinks
     updateDuration(e) {
         const { obj } = this.state;
         const { durations } = obj
@@ -136,7 +158,9 @@ class Profile extends Component {
         })
         console.log(bev)
     }
+    //finish steps3
 
+    //step1 name and phone no updation by passing it in props
     updateText(e, id) {
         let { nickName, phone } = this.state.obj;
 
@@ -153,6 +177,9 @@ class Profile extends Component {
             })
         }
     }
+    //finish step1
+
+    //steps2 update obj.image's avatarURL which is comming through child component
 
     updateImageUrl(downloadURL, fileN) {
         const { images } = this.state.obj
@@ -162,6 +189,21 @@ class Profile extends Component {
             images
         })
     }
+    //finish step2
+
+    //step4 getting location from coords from childComponent index.js
+    getCurrentLocation(c) {
+        const { location } = this.state.obj
+        location.lat = c.latitude
+        location.lng = c.longitude
+
+        this.setState({ location })
+
+        console.log("ccc", this.state.obj)
+        console.log("ccc", c)
+
+    }
+    //finish step4
 
     getStepContent(step) {
         const { classes } = this.props;
@@ -171,7 +213,9 @@ class Profile extends Component {
         switch (step) {
             case 0:
                 return (
-                    <Steps1 updateText={this.updateText} />
+                    <div>
+                        <Steps1 updateText={this.updateText} />
+                    </div>
                 );
             case 1:
                 return (
@@ -181,50 +225,11 @@ class Profile extends Component {
                 return (
                     <div id="beverageList">
                         <Steps3 obj={obj} updateDuration={this.updateDuration} updateBeverage={this.updateBeverage} removeBeverage={this.removeBeverage} />
-                        {/* {checked.map((outerValue, outerIndex) => {
-                            return (
-                              
-                                <Card key={outerIndex} className="beveragesCard">
-                                    <CardMedia
-                                        component="img"
-                                        className="beveragesImage"
-                                        height="150"
-                                        image={img[outerIndex]}
-                                    />
-                                    <List>
-                                        {[20, 40, 120].map((innerValue, innerIndex) => {
-                                            return (
-                                                <ListItem
-                                                    key={innerValue}
-                                                    role={undefined}
-                                                    dense
-                                                    button
-                                                    onClick={this.handleToggle(innerIndex, outerIndex)}
-                                                    className={classes.listItem}
-                                                >
-                                                    <Checkbox
-                                                        checked={checked[outerIndex].check.indexOf(innerIndex) !== -1}
-                                                        tabIndex={-1}
-                                                        disableRipple
-                                                    />
-
-                                                    <ListItemText primary={`Duration ${innerValue}`} />
-                                                    <ListItemSecondaryAction>
-                                                        <IconButton aria-label="Comments">
-                                                        </IconButton>
-                                                    </ListItemSecondaryAction>
-                                                </ListItem>
-                                            )
-                                        })}
-                                    </List>
-                                </Card>
-                            )
-                        })} */}
                     </div>
                 );
             case 3:
                 return (<div>
-                    Show Maps
+                    <Steps4 getCurrentLocation={this.getCurrentLocation} />
                 </div>)
             default:
                 return 'Unknown step';
@@ -239,7 +244,7 @@ class Profile extends Component {
         console.log("dur---", this.state.obj.durations)
 
         return (
-            <div className={classes.root}>
+            <div className={classNames(classes.root, "stepperDiv")}>
                 <Stepper activeStep={activeStep} orientation="vertical">
                     {steps.map((label, index) => {
                         return (
@@ -273,10 +278,10 @@ class Profile extends Component {
                 </Stepper>
                 {activeStep === steps.length && (
                     <Paper square elevation={0} className={classes.resetContainer}>
-                        <Typography>All steps completed - you&quot;re finished</Typography>
-                        <Button onClick={this.handleReset} className={classes.button}>
-                            Reset
-            </Button>
+                        <Typography>All steps completed - you&quot;re finished the process</Typography>
+                        <Button onClick={this.handleReset} className={classNames(classes.button, classes.cssRoot)} size="large">
+                            Submit
+                        </Button>
                     </Paper>
                 )}
             </div>
@@ -287,29 +292,15 @@ Profile.propTypes = {
     classes: PropTypes.object,
 };
 
-export default withStyles(styles)(Profile);
+const mapStateToProps = (state) => {
+    return {
+        user: state.authReducer.user
+    }
+}
 
-// <List>
-//     {[0, 1, 2, 3].map((value, index) => {
-//         return
-//         <ListItem
-//             key={value}
-//             role={undefined}
-//             dense
-//             button
-//             onClick={this.handleToggle(value, index)}
-//             className={classes.listItem}
-//         >
-//             <Checkbox
-//                 checked={this.state.checked.indexOf(value) !== -1}
-//                 tabIndex={-1}
-//                 disableRipple
-//             />
-//             <ListItemText primary={`Line item ${value + 1}`} />
-//             <ListItemSecondaryAction>
-//                 <IconButton aria-label="Comments">
-//                 </IconButton>
-//             </ListItemSecondaryAction>
-//         </ListItem>
-//     })}
-// </List>)
+const mapDispatchToProps = (dispatch) => {
+    return {
+        updateUser: (user) => dispatch(updateUser(user))
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Profile));
