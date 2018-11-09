@@ -27,9 +27,9 @@ import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from '@material-ui/core/IconButton';
 
 import CustomUploadButton from "react-firebase-file-uploader/lib/CustomUploadButton";
-import FileUploader from "react-firebase-file-uploader";
+// import FileUploader from "react-firebase-file-uploader";
 
-import firebase from "../../Config/firebase"
+import { firebase } from "../../Config/firebase"
 
 import Steps1 from "./Step1/index"
 import Steps2 from "./Step2/index"
@@ -39,9 +39,10 @@ import Steps4 from "./Step4/index"
 import { createMuiTheme } from '@material-ui/core/styles';
 import green from '@material-ui/core/colors/green';
 
+import { pushData } from '../../Config/firebase'
 //redux connect
-import { connect } from 'react-redux'
-import { updateUser } from './../../Config/Redux/Action/authAction'
+// import { connect } from 'react-redux'
+// import { updateUser } from '../../Redux/Action/authAction'
 
 const styles = theme => ({
     root: {
@@ -122,6 +123,7 @@ class Profile extends Component {
         this.setState({
             activeStep: 0,
         });
+        pushData(this.state.obj)
     };
 
     getSteps() {
@@ -292,15 +294,16 @@ Profile.propTypes = {
     classes: PropTypes.object,
 };
 
-const mapStateToProps = (state) => {
-    return {
-        user: state.authReducer.user
-    }
-}
+export default withStyles(styles)(Profile)
+// const mapStateToProps = (state) => {
+//     return {
+//         user: state.authReducer.user
+//     }
+// }
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        updateUser: (user) => dispatch(updateUser(user))
-    }
-}
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Profile));
+// const mapDispatchToProps = (dispatch) => {
+//     return {
+//         updateUser: (user) => dispatch(updateUser(user))
+//     }
+// }
+// export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Profile));

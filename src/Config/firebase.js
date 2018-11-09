@@ -1,3 +1,4 @@
+import { duration } from "@material-ui/core/styles/transitions";
 import * as firebase from 'firebase'
 
 var config = {
@@ -9,6 +10,41 @@ var config = {
     messagingSenderId: "130657948638"
 };
 
+
 firebase.initializeApp(config);
 
-export default firebase
+
+
+const pushData = (obj) => {
+    const uid = firebase.auth().currentUser.uid;
+    const { user } = this.props
+    let newObj = {
+        displayName: user.displayName,
+        email: user.email,
+        nickName: obj.nickName,
+        phone: obj.phone,
+        images: obj.images,
+        location: obj.location,
+        bev: obj.bev,
+        duration: obj.durations,
+        uid: uid,
+        avatar: user.photoURL
+    }
+    firebase.database().ref("/").child(`Registration/${uid}`).set(newObj)
+        .then((res) => console.log("data is uploaded"))
+    console.log("objd----", obj)
+}
+
+const getUsersData = () => {
+    const uid = firebase.auth().currentUser.uid;
+    firebase.database().ref(`Registration/`).on("child_added", data => {
+        let obj = data.val()
+        // console.log(obj)
+        return obj
+    })
+}
+export {
+    firebase,
+    pushData,
+    getUsersData
+}

@@ -31,7 +31,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from '@material-ui/core/IconButton';
 
 import CustomUploadButton from "react-firebase-file-uploader/lib/CustomUploadButton";
-import FileUploader from "react-firebase-file-uploader";
+// import FileUploader from "react-firebase-file-uploader";
 
 
 const styles = theme => ({

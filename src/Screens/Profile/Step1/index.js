@@ -4,6 +4,12 @@ import { withStyles } from '@material-ui/core/styles';
 
 import TextField from '@material-ui/core/TextField';
 
+import AccountCircle from '@material-ui/icons/AccountCircle';
+
+import PhoneCircle from '@material-ui/icons/Phone';
+
+import Grid from '@material-ui/core/Grid';
+
 const styles = theme => ({
     textField: {
         marginLeft: theme.spacing.unit,
@@ -27,22 +33,37 @@ class Steps1 extends Component {
 
         return (
             < form noValidate autoComplete="off" >
-                <TextField
-                    id="standard-name"
-                    label="Nick Name"
-                    margin="normal"
-                    className={classes.textField}
-                    required
-                    onChange={(e) => updateText(e, e.target.id)}
-                />
-                <TextField
-                    id="standard-phoneNumber"
-                    label="Phone Number"
-                    type="number"
-                    className={classes.textField}
-                    margin="normal"
-                    onChange={(e) => updateText(e, e.target.id)}
-                />
+                <Grid container spacing={8} alignItems="flex-end">
+                    <Grid item>
+                        <AccountCircle />
+                    </Grid>
+                    <Grid item>
+                        <TextField
+                            id="standard-name"
+                            label="Nick Name"
+                            margin="normal"
+                            className={classes.textField}
+                            required
+                            onChange={(e) => updateText(e, e.target.id)}
+
+                        />
+                    </Grid>
+                </Grid>
+                <Grid container spacing={8} alignItems="flex-end">
+                    <Grid item>
+                        <PhoneCircle />
+                    </Grid>
+                    <Grid item>
+                        <TextField
+                            id="standard-phoneNumber"
+                            label="Phone Number"
+                            type="number"
+                            className={classes.textField}
+                            margin="normal"
+                            onChange={(e) => updateText(e, e.target.id)}
+                        />
+                    </Grid>
+                </Grid>
             </form >)
     }
 }

@@ -6,14 +6,17 @@ import Profile from './Screens/Profile/Profile';
 
 // import * as firebase from 'firebase'
 
-import firebase from './Config/firebase'
+import { firebase } from './Config/firebase'
 import Routes from "./Config/Router/router";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import primaryAppBar from './Components/appBar/appBar.js'
+
+import AppBar from "./Components/appBar/AppBar"
 
 //redux
 import { Provider } from "react-redux";
-import store from './Config/Redux/Store/store'
+import store from './Redux/store'
+import { connect } from "react-redux"
+
 
 class App extends Component {
     constructor() {
@@ -21,9 +24,9 @@ class App extends Component {
         this.state = {
             loginFlag: false,
             isAvailable: false
-
         }
         this.showProfile = this.showProfile.bind(this);
+        this.hideProfile = this.hideProfile.bind(this);
     }
 
     showProfile() {
@@ -32,16 +35,34 @@ class App extends Component {
         })
     }
 
+    hideProfile() {
+        this.setState({
+            loginFlag: false
+        })
+    }
     render() {
         const { loginFlag } = this.state
         return (
             <Provider store={store}>
                 <div className="App">
-                    <Routes loginFlag={loginFlag} />
-                </div>
+                    {loginFlag && <AppBar />}
+                    <Routes showProfile={this.showProfile} hideProfile={this.hideProfile} />
+                </div >
             </Provider>
         );
     }
 }
 
+// const mapStateToProps = (state) => {
+//     return {
+//         user: state.authReducer.user
+//     }
+// }
+
+// const mapDispatchToProps = (dispatch) => {
+//     return {
+//         // updateState: (user)=>dispatch(updateUser(user))
+//     }
+// }
+// export default connect(mapStateToProps, mapDispatchToProps)(App);
 export default App;

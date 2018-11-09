@@ -11,7 +11,7 @@ const Routes = (props) => {
     console.log("router++", props)
     return <Router>
         <div>
-            <Route exact path="/" render={newProps => <Login {...newProps} cat={props} />} />
+            <Route exact path="/" render={newProps => <Login {...newProps} loginStateFunction={props.showProfile} />} />
             <Route exact path="/profile" component={Profile} />
             <Route exact path="/profile/:userUid" component={Dashboard} />
         </div>

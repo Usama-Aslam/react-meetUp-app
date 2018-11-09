@@ -8,6 +8,9 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 
+import SideMenu from "./../sideMenu/SideMenu";
+
+
 const styles = {
     root: {
         flexGrow: 1,
@@ -21,23 +24,32 @@ const styles = {
     },
 };
 
-function ButtonAppBar(props) {
-    const { classes } = props;
-    return (
-        <div className={classes.root}>
-            <AppBar position="static">
-                <Toolbar>
-                    <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
-                        <MenuIcon />
-                    </IconButton>
-                    <Typography variant="h6" color="inherit" className={classes.grow}>
-                        News
+class ButtonAppBar extends React.Component {
+    constructor(props) {
+        super(props)
+    }
+
+    render() {
+        const { classes } = this.props;
+        return (
+            <div className={classes.root}>
+                <AppBar position="static">
+                    {/* <SideMenu /> */}
+                    <Toolbar>
+                        <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
+                            <SideMenu />
+                        </IconButton>
+                        <Typography variant="h6" color="inherit" className={classes.grow}>
+                            News
           </Typography>
-                    <Button color="inherit">Login</Button>
-                </Toolbar>
-            </AppBar>
-        </div>
-    );
+                        <Button color="inherit">
+                            {false ? "Log Out" : "Login"}
+                        </Button>
+                    </Toolbar>
+                </AppBar>
+            </div >
+        );
+    }
 }
 
 ButtonAppBar.propTypes = {
