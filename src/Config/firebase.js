@@ -13,14 +13,12 @@ var config = {
 
 firebase.initializeApp(config);
 
-
-
 const pushData = (obj) => {
+    console.log("obj", obj)
     const uid = firebase.auth().currentUser.uid;
-    const { user } = this.props
     let newObj = {
-        displayName: user.displayName,
-        email: user.email,
+        displayName: obj.displayName,
+        email: obj.email,
         nickName: obj.nickName,
         phone: obj.phone,
         images: obj.images,
@@ -28,11 +26,13 @@ const pushData = (obj) => {
         bev: obj.bev,
         duration: obj.durations,
         uid: uid,
-        avatar: user.photoURL
+        avatar: obj.avatar
     }
     firebase.database().ref("/").child(`Registration/${uid}`).set(newObj)
-        .then((res) => console.log("data is uploaded"))
-    console.log("objd----", newObj)
+        .then((res) => {
+            console.log("data is uploaded")
+        })
+    console.log("obj----", obj)
 }
 
 const getUsersData = () => {
@@ -49,7 +49,7 @@ const checkAuth = () => {
         if (user) {
             console.log("currentUser Present")
         }
-        else{
+        else {
             //toast
             console.log("CurrentUser is not Present")
             this.props.history.replace("/")

@@ -29,7 +29,7 @@ import IconButton from '@material-ui/core/IconButton';
 import CustomUploadButton from "react-firebase-file-uploader/lib/CustomUploadButton";
 // import FileUploader from "react-firebase-file-uploader";
 
-import { firebase } from "../../Config/firebase"
+import { firebase, pushData } from "../../Config/firebase"
 
 import Steps1 from "./Step1/index"
 import Steps2 from "./Step2/index"
@@ -39,11 +39,11 @@ import Steps4 from "./Step4/index"
 import { createMuiTheme } from '@material-ui/core/styles';
 import green from '@material-ui/core/colors/green';
 
-import { pushData } from '../../Config/firebase'
 // import { resolve } from 'dns';
+
 //redux connect
-// import { connect } from 'react-redux'
-// import { updateUser } from '../../Redux/Action/authAction'
+import { connect } from 'react-redux'
+import { updateUser } from '../../Redux/Action/authAction'
 
 const styles = theme => ({
     root: {
@@ -78,21 +78,23 @@ const styles = theme => ({
 });
 
 class Profile extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             activeStep: 0,
             // checked: [{ check: [0] }, { check: [0] }, { check: [0] }],
             img: [coffee, juice, cocktail],
             currentFileNumber: null,
             obj: {
+                displayName: this.props.user.displayName,
+                email: this.props.user.email,
                 nickName: null,
                 phone: null,
-                avatar: null,
+                avatar: this.props.user.photoURL,
                 images: [{ avatarURL: null }, { avatarURL: null }, { avatarURL: null }],
                 location: { lng: null, lat: null },
                 bev: [],
-                durations: [],
+                durations: []
             },
         }
         this.updateText = this.updateText.bind(this)
@@ -101,7 +103,6 @@ class Profile extends Component {
         this.updateBeverage = this.updateBeverage.bind(this)
         this.removeBeverage = this.removeBeverage.bind(this)
         this.getCurrentLocation = this.getCurrentLocation.bind(this)
-
     }
 
     componentDidMount() {
@@ -124,15 +125,8 @@ class Profile extends Component {
         // this.setState({
         //     activeStep: 0,
         // });
-        // return new Promise(function (resolve, reject) {
-        //     resolve(pushData(this.state.obj))
-        // })
-        //     .then((e) => {
-        //         console.log("solved")
-        //     }).catch(() => console.log("error"))
         pushData(this.state.obj)
-            .then(() => this.props.history.replace(`/profile/dashboard/${this.props.user.uid}/meeting`))
-
+        this.props.history.replace(`/profile/dashboard/${this.props.user.uid}/meeting`)
     };
 
     getSteps() {
@@ -250,7 +244,7 @@ class Profile extends Component {
         const { classes } = this.props;
         const steps = this.getSteps();
         const { activeStep } = this.state;
-
+        console.log("props", this.props)
         console.log("profile images---", this.state.obj.images)
         console.log("dur---", this.state.obj.durations)
 
@@ -303,16 +297,16 @@ Profile.propTypes = {
     classes: PropTypes.object,
 };
 
-export default withStyles(styles)(Profile)
-// const mapStateToProps = (state) => {
-//     return {
-//         user: state.authReducer.user
-//     }
-// }
+// export default withStyles(styles)(Profile)
+const mapStateToProps = (state) => {
+    return {
+        user: state.authReducer.user
+    }
+}
 
-// const mapDispatchToProps = (dispatch) => {
-//     return {
-//         updateUser: (user) => dispatch(updateUser(user))
-//     }
-// }
-// export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Profile));
+const mapDispatchToProps = (dispatch) => {
+    return {
+        updateUser: (user) => dispatch(updateUser(user))
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Profile));

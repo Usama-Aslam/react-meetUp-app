@@ -51,23 +51,22 @@ class Login extends Component {
             })
             .then(async (user) => {
                 console.log(user)
+
                 const uid = firebase.auth().currentUser.uid
                 this.props.updateUser(user)
+
                 firebase.database().ref("/Registration/").once("value", snapshot => {
                     if (snapshot.hasChild(uid)) {
                         this.props.history.replace(`/profile/dashboard/${uid}/meeting`)
                         this.props.loginStateFunction()
-                    } else {
+                    }
+                    else {
                         this.props.history.replace("/profile")
                         this.props.loginStateFunction()
                     }
                 })
             })
             .catch((e) => {
-                const uid = "jsljfsdkfjsfsjfad"
-                this.props.history.replace(`/profile/dashboard/${uid}/meeting`)
-                this.props.loginStateFunction()
-                // console.log(this.props)
                 // // Handle Errors here.
                 // var errorCode = error.code;
                 // var errorMessage = error.message;
