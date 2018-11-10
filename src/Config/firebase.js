@@ -47,10 +47,11 @@ const getUsersData = () => {
 const checkAuth = () => {
     firebase.auth().onAuthStateChanged((user) => {
         if (user) {
-            console.log("currentUser Presend")
+            console.log("currentUser Present")
         }
         else{
             //toast
+            console.log("CurrentUser is not Present")
             this.props.history.replace("/")
         }
     })
