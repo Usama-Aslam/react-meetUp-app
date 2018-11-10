@@ -47,21 +47,26 @@ class Login extends Component {
                 // The signed-in user info.
                 var user = result.user.toJSON();
 
-                // if (user.lastLoginAt === user.createdAt) {
-
-                // }
-                // ...
                 return user
             })
             .then(async (user) => {
                 console.log(user)
-
+                const uid = firebase.auth().currentUser.uid
                 this.props.updateUser(user)
-                this.props.loginStateFunction()
-
-                this.props.history.push("/profile/sklfslfsfslkfjsdfk")
+                firebase.database().ref("/Registration/").once("value", snapshot => {
+                    if (snapshot.hasChild(uid)) {
+                        this.props.history.replace(`/profile/dashboard/${uid}/meeting`)
+                        this.props.loginStateFunction()
+                    } else {
+                        this.props.history.replace("/profile")
+                        this.props.loginStateFunction()
+                    }
+                })
             })
             .catch((e) => {
+                const uid = "jsljfsdkfjsfsjfad"
+                this.props.history.replace(`/profile/dashboard/${uid}/meeting`)
+                this.props.loginStateFunction()
                 // console.log(this.props)
                 // // Handle Errors here.
                 // var errorCode = error.code;
@@ -77,7 +82,7 @@ class Login extends Component {
 
     render() {
         const { showProfile } = this.props
-        // console.log("loginProfle", this.props)
+        console.log("loginProfle", this.props.user)
         return (
             <div id="LoginPanel">
                 <p>Log in to continue to Meetup</p>

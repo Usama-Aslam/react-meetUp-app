@@ -10,6 +10,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import "./style.css";
 import classNames from 'classnames';
 
+import Grid from '@material-ui/core/Grid'
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -28,7 +29,7 @@ const styles = theme => ({
         marginRight: theme.spacing.unit,
     },
     card: {
-        // maxWidth: 400,
+        // maxWidth: 500,
         // minHeight: 280,
     },
 });
@@ -39,11 +40,11 @@ class TinderCards extends Component {
     }
 
     render() {
-        const { classes, items } = this.props
+        const { classes, usersInfo } = this.props
         return (
             <div>
                 <Card className={classNames(classes.card, "swipeCard")}>
-                    {console.log(items)}
+                    {console.log(usersInfo.images[0].avatarURL)}
                     <CardActionArea>
                         <CardMedia
                             component="img"
@@ -55,10 +56,10 @@ class TinderCards extends Component {
 
                     <CardContent>
                         <Typography className="userFullName">
-                            {items}
+                            {usersInfo.nickName}
                         </Typography>
                         <Typography className="userNickName">
-                            NickName
+                            {usersInfo.nickName}
                         </Typography>
                     </CardContent>
 
@@ -82,7 +83,40 @@ class TinderCards extends Component {
                     </CardActions>
 
                 </Card>
-
+                {/* <Grid container alignItems='center' justify='space-evenly' spacing={4}>
+                    <Grid item xs={12} sm={12}>
+                        <Grid spacing={4}>
+                            <Card className={classes.card} >
+                                <CardActionArea width="500">
+                                    <CardMedia
+                                        component="img"
+                                        className={classes.media}
+                                        
+                                        
+                                        image="{obj.images[0].avatarURL}"
+                                    />
+                                </CardActionArea>
+                                <CardActions>
+                                    <label htmlFor="contained-button-file-0" className="uploadBtnStyleLabel">
+                                        <Button variant="outlined" component="span" className={classes.button} size="small">
+                                            Upload-1
+                                        </Button>
+                                        <input
+                                            hidden
+                                            accept="image/*"
+                                            className={classes.input}
+                                            id="contained-button-file-0"
+                                            multiple
+                                            type="file"
+                                            name="0"
+                                            onChange={(e) => this.uploadFile(e)}
+                                        />
+                                    </label>
+                                </CardActions>
+                            </Card>
+                        </Grid>
+                    </Grid>
+                </Grid> */}
             </div>
         );
     };

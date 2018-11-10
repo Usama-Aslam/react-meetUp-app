@@ -13,7 +13,7 @@ const Routes = (props) => {
         <div>
             <Route exact path="/" render={newProps => <Login {...newProps} loginStateFunction={props.showProfile} />} />
             <Route exact path="/profile" component={Profile} />
-            <Route exact path="/profile/:userUid" component={Dashboard} />
+            <Route exact path="/profile/dashboard/:userUid/meeting" component={Dashboard} />
         </div>
     </Router>
 }

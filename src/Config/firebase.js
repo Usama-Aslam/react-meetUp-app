@@ -32,7 +32,7 @@ const pushData = (obj) => {
     }
     firebase.database().ref("/").child(`Registration/${uid}`).set(newObj)
         .then((res) => console.log("data is uploaded"))
-    console.log("objd----", obj)
+    console.log("objd----", newObj)
 }
 
 const getUsersData = () => {
@@ -43,8 +43,21 @@ const getUsersData = () => {
         return obj
     })
 }
+
+const checkAuth = () => {
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+            console.log("currentUser Presend")
+        }
+        else{
+            //toast
+            this.props.history.replace("/")
+        }
+    })
+}
 export {
     firebase,
     pushData,
-    getUsersData
+    getUsersData,
+    checkAuth
 }

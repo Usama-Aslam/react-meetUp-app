@@ -1,4 +1,4 @@
-import { firebase, getUsersData } from '../../../Config/firebase'
+import { firebase, getUsersData, pushData } from '../../../Config/firebase'
 import React, { Component } from 'react';
 import { Typography } from '@material-ui/core';
 
@@ -48,8 +48,8 @@ class SetMeeting extends Component {
     constructor() {
         super();
         this.state = {
-            allUsers: null,
-            meetingDeck: false,
+            allUsers: [],
+            meetingDeck: true,
             data: ['Alexandre', 'Thomas', 'Lucien']
 
         }
@@ -63,11 +63,23 @@ class SetMeeting extends Component {
 
     getUsersData() {
         // const uid = firebase.auth().currentUser.uid;
-        firebase.database().ref(`Registration/`).once("value", data => {
-            this.setState({ allUsers: data.val() })
-            let obj = data.val()
-            console.log("getting--", obj)
+        const arr = [];
+        firebase.database().ref(`Registration/`).on("child_added", async data => {
+            const { allUsers } = this.state
+            allUsers.push(data.val())
+            this.setState({ allUsers: this.state.allUsers })
+            // let obj = data.val();
+            // let key = data.key;
+            // let currentKey = firebase.auth().currentUser.uid;
+            // if (key !== currentKey) {
+            //     arr.push(obj)
+            // }
         })
+        // console.log("fetching data-----array", arr)
+        // this.setState({
+        //     allUsers: arr
+        // })
+        // console.log("fetching data-----allUsers", arr)
     }
 
     showMeetingDeck() {
@@ -76,22 +88,22 @@ class SetMeeting extends Component {
         })
     }
 
-    componentDidMount() {
-        let a = this.getUsersData()
-        setTimeout(() => {
+    componentWillMount() {
+        this.getUsersData()
+        // setTimeout(() => {
 
-            console.log("a", this.state.allUsers)
-        }, 3000);
+        //     console.log("a", this.state.allUsers)
+        // }, 3000);
     }
 
 
     action(items) {
-        console.log("fuck", items)
+        // console.log("duck", items)
     }
 
     removeUser(items) {
         const { data } = this.state
-        console.log("fuck", items)
+        console.log("duck", items)
     }
 
     reqMeeting() {
@@ -100,39 +112,53 @@ class SetMeeting extends Component {
 
     swipeCard() {
         const { classes } = this.props
-        const { allUsers, data } = this.state
-        console.log(this.state.data)
-
+        const { allUsers, data } = this.state;
         return (
             <div className='master-roots'>
-
                 <Cards onEnd={() => console.log('end')} >
-                    {
-                        data.map((items, index) =>
-                            <Card
-                                onSwipeLeft={() => {
-                                    this.action(items)
-                                }}
-                                onSwipeRight={this.reqMeeting}>
+                    {allUsers.map(usersInfo =>
+                        <Card
+                            key={usersInfo}
+                            onSwipeLeft={() => this.action(usersInfo)}
+                            onSwipeRight={this.reqMeeting}>
+                            <p>{usersInfo.nickName}</p>
+                            <Grid contained >
 
-                                <Grid contained spacing={4} >
+                                <Grid item xs={12} sm={12}>
 
-                                    <Grid item xs={12} sm={12}>
-
-                                        <TinderCards items={items} />
-
-                                    </Grid>
+                                    <TinderCards usersInfo={usersInfo} removeUser={this.removeUser} reqMeeting={this.reqMeeting} />
 
                                 </Grid>
 
-                            </Card>
-                        )
-                    }
-                </Cards >
-            </div>
+                            </Grid>
+                        </Card>
+                    )}
+                </Cards>
+            </div >
         )
     }
 
+    //      <Cards onEnd={() => console.log('end')} >
+    //     {
+    //         data.map((items, index) =>
+    //             <Card
+    //                 onSwipeLeft={() => this.action(items)}
+    //                 onSwipeRight={this.reqMeeting}>
+
+    //                 <Grid contained spacing={4} >
+
+    //                     <Grid item xs={12} sm={12}>
+
+    //                         <TinderCards items={items} />
+
+    //                     </Grid>
+
+    //                 </Grid>
+
+    //             </Card>
+    //         )
+    //     }
+    // </Cards >
 
     render() {
         const { classes } = this.props;

@@ -40,6 +40,7 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import green from '@material-ui/core/colors/green';
 
 import { pushData } from '../../Config/firebase'
+// import { resolve } from 'dns';
 //redux connect
 // import { connect } from 'react-redux'
 // import { updateUser } from '../../Redux/Action/authAction'
@@ -120,10 +121,18 @@ class Profile extends Component {
     };
 
     handleReset = () => {
-        this.setState({
-            activeStep: 0,
-        });
+        // this.setState({
+        //     activeStep: 0,
+        // });
+        // return new Promise(function (resolve, reject) {
+        //     resolve(pushData(this.state.obj))
+        // })
+        //     .then((e) => {
+        //         console.log("solved")
+        //     }).catch(() => console.log("error"))
         pushData(this.state.obj)
+            .then(() => this.props.history.replace(`/profile/dashboard/${this.props.user.uid}/meeting`))
+
     };
 
     getSteps() {
