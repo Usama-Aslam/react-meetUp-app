@@ -27,9 +27,14 @@ import Cards, { Card } from 'react-swipe-deck'
 // const data = ['Alexandre', 'Thomas', 'Lucien']
 
 //redux
-// import { connect } from "react-redux"
-// import { updateUser } from "../../../Redux/Action/authAction"
+import { connect } from "react-redux"
+import { updateUser } from "../../../Redux/Action/authAction"
 
+//dialogbox
+// import DialogBox from "../../../Components/DialogBox/DialogBox"
+
+//sweetAlert2
+import swal from "sweetalert2";
 
 const styles = theme => ({
     button: {
@@ -50,8 +55,6 @@ class SetMeeting extends Component {
         this.state = {
             allUsers: [],
             meetingDeck: true,
-            data: ['Alexandre', 'Thomas', 'Lucien']
-
         }
         this.getUsersData = this.getUsersData.bind(this)
         this.showMeetingDeck = this.showMeetingDeck.bind(this)
@@ -59,6 +62,10 @@ class SetMeeting extends Component {
         this.swipeCard = this.swipeCard.bind(this)
         this.reqMeeting = this.reqMeeting.bind(this)
         this.action = this.action.bind(this)
+        this.showDialogBox = this.showDialogBox.bind(this)
+        this.handleClickOpen = this.handleClickOpen.bind(this)
+        this.handleClose = this.handleClose.bind(this)
+        this.getUsersData()
     }
 
     getUsersData() {
@@ -89,7 +96,7 @@ class SetMeeting extends Component {
     }
 
     componentWillMount() {
-        this.getUsersData()
+        // this.getUsersData()
         // setTimeout(() => {
 
         //     console.log("a", this.state.allUsers)
@@ -102,17 +109,53 @@ class SetMeeting extends Component {
     }
 
     removeUser(items) {
-        const { data } = this.state
-        console.log("duck", items)
+        const { allUsers } = this.state
+        allUsers.shift();
+        this.setState({
+            allUsers
+        })
+        console.log("removed", items)
     }
 
     reqMeeting() {
         console.log("startMeeting")
     }
+    showDialogBox() {
+        this.setState({
+            dialogOpen: !this.state.dialogOpen
+        })
+        console.log("open", this.state.dialogOpen)
+    }
+
+    handleClickOpen = (usersInfo) => {
+        this.setState({ dialogOpen: true });
+        console.log('chal gaya', this.props)
+        swal({
+            title: `${usersInfo.displayName}`,
+            text: "Are you sure you want to meet him",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sure'
+        }).then((result) => {
+            if (result.value) {
+                const uid = firebase.auth().currentUser.uid
+                this.props.history.push(`/profile/dashboard/${uid}/meeting/location`);
+            }
+        })
+    };
+
+    handleClose = () => {
+        this.setState({ dialogOpen: false });
+
+    };
 
     swipeCard() {
         const { classes } = this.props
-        const { allUsers, data } = this.state;
+        const { allUsers, data, dialogOpen } = this.state;
+        console.log(data)
+        // debugger;
         return (
             <div className='master-roots'>
                 <Cards onEnd={() => console.log('end')} >
@@ -120,14 +163,13 @@ class SetMeeting extends Component {
                         <Card
                             key={usersInfo}
                             onSwipeLeft={() => this.action(usersInfo)}
-                            onSwipeRight={this.reqMeeting}>
+                            onSwipeRight={() => this.handleClickOpen(usersInfo)}>
                             <p>{usersInfo.nickName}</p>
+
                             <Grid contained >
 
                                 <Grid item xs={12} sm={12}>
-
                                     <TinderCards usersInfo={usersInfo} removeUser={this.removeUser} reqMeeting={this.reqMeeting} />
-
                                 </Grid>
 
                             </Grid>
@@ -137,28 +179,6 @@ class SetMeeting extends Component {
             </div >
         )
     }
-
-    //      <Cards onEnd={() => console.log('end')} >
-    //     {
-    //         data.map((items, index) =>
-    //             <Card
-    //                 onSwipeLeft={() => this.action(items)}
-    //                 onSwipeRight={this.reqMeeting}>
-
-    //                 <Grid contained spacing={4} >
-
-    //                     <Grid item xs={12} sm={12}>
-
-    //                         <TinderCards items={items} />
-
-    //                     </Grid>
-
-    //                 </Grid>
-
-    //             </Card>
-    //         )
-    //     }
-    // </Cards >
 
     render() {
         const { classes } = this.props;
@@ -203,20 +223,20 @@ SetMeeting.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(SetMeeting);
+// export default withStyles(styles)(SetMeeting);
 
-                            // export default SetMeeting;
-// const mapStateToProps = (state) => {
-//     console.log("state from component", state)
-//     return {
-//         user: state.user
-//     }
-// }
+// export default SetMeeting;
+const mapStateToProps = (state) => {
+    console.log("state from component", state)
+    return {
+        user: state.user
+    }
+}
 
-// const mapDispatchToProps = (dispatch) => {
-//     return {
-//         updateUser: (user) => dispatch(updateUser(user))
-//     }
-// }
-// // export default Login
-// export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
+const mapDispatchToProps = (dispatch) => {
+    return {
+        updateUser: (user) => dispatch(updateUser(user))
+    }
+}
+// export default Login
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(SetMeeting));

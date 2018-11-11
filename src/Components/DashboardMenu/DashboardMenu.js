@@ -49,7 +49,7 @@ class FullWidthTabs extends React.Component {
 
     render() {
         const { classes, theme } = this.props;
-
+        console.log("dashmenu", this.props)
         return (
             <div className={classes.root}>
                 <AppBar position="static" color="default">
@@ -71,8 +71,8 @@ class FullWidthTabs extends React.Component {
                     onChangeIndex={this.handleChangeIndex}
                 >
                     <TabContainer dir={theme.direction}>
-                        <SetMeeting />
-                        <MeetingData />
+                        <SetMeeting {...this.props} />
+                        <MeetingData {...this.props}/>
                     </TabContainer>
                     <TabContainer dir={theme.direction}>
                         {/* <RequestData /> */}

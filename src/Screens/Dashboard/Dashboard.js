@@ -14,7 +14,7 @@ class Dashboard extends Component {
     render() {
         return (
             <div>
-                <DashboardMenu />
+                <DashboardMenu {...this.props} />
             </div>
         );
     };

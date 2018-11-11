@@ -40,11 +40,11 @@ class TinderCards extends Component {
     }
 
     render() {
-        const { classes, usersInfo } = this.props
+        const { classes, usersInfo, removeUser, reqMeeting } = this.props
         return (
             <div>
                 <Card className={classNames(classes.card, "swipeCard")}>
-                    {console.log(usersInfo.images[0].avatarURL)}
+                    {/* {console.log(usersInfo.images[0].avatarURL)} */}
                     <CardActionArea>
                         <CardMedia
                             component="img"
@@ -56,7 +56,7 @@ class TinderCards extends Component {
 
                     <CardContent>
                         <Typography className="userFullName">
-                            {usersInfo.nickName}
+                            {usersInfo.displayName}
                         </Typography>
                         <Typography className="userNickName">
                             {usersInfo.nickName}
@@ -67,7 +67,7 @@ class TinderCards extends Component {
 
                         <label htmlFor="contained-button-remove" className="removeBtn">
                             <Button variant="outlined" component="span" className={classes.button} size="small"
-                                onClick={this.removeUser}
+                                onClick={() => removeUser(usersInfo)}
                             >
                                 X
                           </Button>
@@ -75,7 +75,7 @@ class TinderCards extends Component {
 
                         <label htmlFor="contained-button-accept" className="acceptBtn">
                             <Button variant="outlined" component="span" className={classes.button} size="small"
-                                onClick={this.reqMeeting}>
+                                onClick={() => reqMeeting(usersInfo)}>
                                 L
                             </Button>
                         </label>
