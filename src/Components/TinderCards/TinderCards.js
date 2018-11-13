@@ -20,7 +20,12 @@ import Button from '@material-ui/core/Button';
 
 // import { firebase } from '../../../Config/firebase'
 
+//Carousel
+import Carousel from '../../Components/Carousel/Carousel'
 
+//icons
+import Check from '@material-ui/icons/Check';
+import Cancel from '@material-ui/icons/Clear';
 const styles = theme => ({
     button: {
         margin: theme.spacing.unit,
@@ -29,8 +34,9 @@ const styles = theme => ({
         marginRight: theme.spacing.unit,
     },
     card: {
-        // maxWidth: 500,
-        // minHeight: 280,
+        // position: 'absolute',
+        // top: theme.spacing.unit * 2,
+        // bottom: theme.spacing.unit * 2
     },
 });
 
@@ -40,18 +46,13 @@ class TinderCards extends Component {
     }
 
     render() {
-        const { classes, usersInfo, removeUser, reqMeeting } = this.props
+        const { classes, usersInfo, removeUser, reqMeeting, userIndex } = this.props
         return (
             <div>
                 <Card className={classNames(classes.card, "swipeCard")}>
-                    {/* {console.log(usersInfo.images[0].avatarURL)} */}
+                    {console.log(usersInfo.images[0].avatarURL)}
                     <CardActionArea>
-                        <CardMedia
-                            component="img"
-                            className={classes.media}
-                            height="300"
-                            image=""
-                        />
+                        <Carousel usersImage={usersInfo.images} />
                     </CardActionArea>
 
                     <CardContent>
@@ -66,57 +67,20 @@ class TinderCards extends Component {
                     <CardActions>
 
                         <label htmlFor="contained-button-remove" className="removeBtn">
-                            <Button variant="outlined" component="span" className={classes.button} size="small"
-                                onClick={() => removeUser(usersInfo)}
-                            >
-                                X
-                          </Button>
+                            <Button variant="fab" mini color="secondary" aria-label="Add" className={classes.button} onClick={() => removeUser(userIndex)}>
+                                <Cancel />
+                            </Button>
                         </label>
 
                         <label htmlFor="contained-button-accept" className="acceptBtn">
-                            <Button variant="outlined" component="span" className={classes.button} size="small"
-                                onClick={() => reqMeeting(usersInfo)}>
-                                L
+                            <Button variant="fab" mini color="primary" aria-label="Add" className={classes.button} onClick={() => reqMeeting(usersInfo)}>
+                                <Check />
                             </Button>
                         </label>
 
                     </CardActions>
 
                 </Card>
-                {/* <Grid container alignItems='center' justify='space-evenly' spacing={4}>
-                    <Grid item xs={12} sm={12}>
-                        <Grid spacing={4}>
-                            <Card className={classes.card} >
-                                <CardActionArea width="500">
-                                    <CardMedia
-                                        component="img"
-                                        className={classes.media}
-                                        
-                                        
-                                        image="{obj.images[0].avatarURL}"
-                                    />
-                                </CardActionArea>
-                                <CardActions>
-                                    <label htmlFor="contained-button-file-0" className="uploadBtnStyleLabel">
-                                        <Button variant="outlined" component="span" className={classes.button} size="small">
-                                            Upload-1
-                                        </Button>
-                                        <input
-                                            hidden
-                                            accept="image/*"
-                                            className={classes.input}
-                                            id="contained-button-file-0"
-                                            multiple
-                                            type="file"
-                                            name="0"
-                                            onChange={(e) => this.uploadFile(e)}
-                                        />
-                                    </label>
-                                </CardActions>
-                            </Card>
-                        </Grid>
-                    </Grid>
-                </Grid> */}
             </div>
         );
     };

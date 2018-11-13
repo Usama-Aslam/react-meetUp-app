@@ -65,7 +65,7 @@ class FullWidthTabs extends React.Component {
                     </Tabs>
                 </AppBar>
                 <SwipeableViews
-                    className="swipeDick"
+                    className="swipeDeck"
                     axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
                     index={this.state.value}
                     onChangeIndex={this.handleChangeIndex}

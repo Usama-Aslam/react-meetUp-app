@@ -29,6 +29,11 @@ import logo from '../../logo.svg';
 
 import "./style.css";
 
+//redux
+import { connect } from 'react-redux'
+import { updateUser } from '../../Redux/Action/authAction'
+import { Link, Route } from "react-router-dom"
+
 const styles = {
     list: {
         width: 250,
@@ -60,13 +65,13 @@ class SwipeableTemporaryDrawer extends React.Component {
     };
 
     render() {
-        const { classes } = this.props;
+        const { classes, user } = this.props;
 
         const sideList = (
             <div className={classes.list}>
 
                 <CardActionArea>
-                    <Avatar alt="Remy Sharp" src={logo} className="sideBar_avatar" />
+                    <Avatar alt="Remy Sharp" src="{user.photoURL}" className="sideBar_avatar" />
                     <CardMedia
                         className={classes.media}
                         image=""
@@ -74,12 +79,12 @@ class SwipeableTemporaryDrawer extends React.Component {
                     />
                     <CardContent>
                         <Typography component="p" className="user_nickName">
-                            Muhammad Usama
-                            </Typography>
+                            {/* {user.displayName} */}
+                        </Typography>
 
                         <Typography component="p" className="user_email">
-                            abc@gmail.com
-                            </Typography>
+                            {/* {user.email} */}
+                        </Typography>
                     </CardContent>
                 </CardActionArea>
 
@@ -91,13 +96,17 @@ class SwipeableTemporaryDrawer extends React.Component {
                         <ListItemIcon>
                             <DashboardIcon />
                         </ListItemIcon>
-                        <ListItemText primary="Dashboard" />
+                        <Link to={"/profile/dashboard/K9DwEyp0KRUxofHRaVh17OViU9w2/meeting"}>
+                            <ListItemText primary="Dashboard" />
+                        </Link>
                     </ListItem>
                     <ListItem button>
                         <ListItemIcon>
                             <MeetingIcon />
                         </ListItemIcon>
-                        <ListItemText primary="Meetings" />
+                        <Link to={"/profile"}>
+                            <ListItemText primary="Profile" />
+                        </Link>
                     </ListItem>
                     <Divider />
                     <ListItem button>
@@ -160,4 +169,16 @@ SwipeableTemporaryDrawer.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(SwipeableTemporaryDrawer);
+// export default withStyles(styles)(SwipeableTemporaryDrawer);
+const mapStateToProps = (state) => {
+    return {
+        user: state.authReducer.user
+    }
+}
+const mapDispatchToProps = (dispatch) => {
+    return {
+        updateUser: (user) => dispatch(updateUser(user))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(SwipeableTemporaryDrawer))

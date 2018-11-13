@@ -1,0 +1,25 @@
+.nearestLocation_div{
+    /* margin-top:20px !important ; */
+}
+.expansionBtn{
+    position:absolute;
+    right:10px
+}
+
+.myclass{
+    text-align: left;
+}
+
+.childclass{
+    text-align: left;
+}
+
+.locationHeading_div{
+    text-align: left;
+}
+.locationName_div{
+    text-align: left;
+}
+.locationAddress_div{
+    text-align: left;
+}

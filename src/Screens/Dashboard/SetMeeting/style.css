@@ -17,7 +17,7 @@
 
 .master-roots>div{
     min-width:500px !important;
-    width:100% !important;
+    /* width:100% !important; */
     height: 500px !important;
     /* background:green; */
     margin:0px auto;
@@ -27,8 +27,8 @@
 .swipeCard{
     position: absolute !important;
     top:-130px !important;
-    left:-85px !important ;
-    min-width: 370px;
+    left:-80px !important ;
+    min-width: 350px;
     min-height:120px;
     width:100% !important;
     padding:0px !important;
@@ -36,13 +36,13 @@
 
 .userFullName{
     text-align:center;
-    color:blue !important;
+    /* color:blue !important; */
     font-size:22px !important;
 }
 
 .userNickName{
     text-align: center;
-    color:blue !important;
+    /* color:blue !important; */
     font-size:16px !important;
 }
 /* 

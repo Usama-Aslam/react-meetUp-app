@@ -39,6 +39,9 @@ import swal from "sweetalert2";
 const styles = theme => ({
     button: {
         margin: theme.spacing.unit,
+        // position: 'fixed',
+        // bottom: theme.spacing.unit * 2,
+        // right: theme.spacing.unit * 2,
     },
     extendedIcon: {
         marginRight: theme.spacing.unit,
@@ -62,9 +65,7 @@ class SetMeeting extends Component {
         this.swipeCard = this.swipeCard.bind(this)
         this.reqMeeting = this.reqMeeting.bind(this)
         this.action = this.action.bind(this)
-        this.showDialogBox = this.showDialogBox.bind(this)
-        this.handleClickOpen = this.handleClickOpen.bind(this)
-        this.handleClose = this.handleClose.bind(this)
+
         this.getUsersData()
     }
 
@@ -108,26 +109,20 @@ class SetMeeting extends Component {
         // console.log("duck", items)
     }
 
-    removeUser(items) {
+    removeUser(index) {
         const { allUsers } = this.state
-        allUsers.shift();
+        allUsers.splice(index, 1);
         this.setState({
             allUsers
         })
-        console.log("removed", items)
+        console.log("removed", index)
     }
 
     reqMeeting() {
         console.log("startMeeting")
     }
-    showDialogBox() {
-        this.setState({
-            dialogOpen: !this.state.dialogOpen
-        })
-        console.log("open", this.state.dialogOpen)
-    }
 
-    handleClickOpen = (usersInfo) => {
+    reqMeeting = (usersInfo) => {
         this.setState({ dialogOpen: true });
         console.log('chal gaya', this.props)
         swal({
@@ -138,38 +133,34 @@ class SetMeeting extends Component {
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Sure'
-        }).then((result) => {
-            if (result.value) {
-                const uid = firebase.auth().currentUser.uid
-                this.props.history.push(`/profile/dashboard/${uid}/meeting/location`);
-            }
         })
+            .then((result) => {
+                if (result.value) {
+                    const uid = firebase.auth().currentUser.uid
+                    this.props.history.push(`/profile/dashboard/${uid}/meeting/location`);
+                }
+            })
     };
 
-    handleClose = () => {
-        this.setState({ dialogOpen: false });
-
-    };
 
     swipeCard() {
         const { classes } = this.props
         const { allUsers, data, dialogOpen } = this.state;
-        console.log(data)
+        console.log("allUsers", allUsers)
         // debugger;
         return (
             <div className='master-roots'>
                 <Cards onEnd={() => console.log('end')} >
-                    {allUsers.map(usersInfo =>
+                    {allUsers.map((usersInfo, index) =>
                         <Card
                             key={usersInfo}
                             onSwipeLeft={() => this.action(usersInfo)}
-                            onSwipeRight={() => this.handleClickOpen(usersInfo)}>
-                            <p>{usersInfo.nickName}</p>
+                            onSwipeRight={() => this.reqMeeting(usersInfo)}>
 
                             <Grid contained >
 
                                 <Grid item xs={12} sm={12}>
-                                    <TinderCards usersInfo={usersInfo} removeUser={this.removeUser} reqMeeting={this.reqMeeting} />
+                                    <TinderCards reqMeeting={this.reqMeeting} removeUser={this.removeUser} userIndex={index} usersInfo={usersInfo} removeUser={this.removeUser} reqMeeting={this.reqMeeting} />
                                 </Grid>
 
                             </Grid>
