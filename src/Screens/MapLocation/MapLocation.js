@@ -21,9 +21,10 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { firebase, checkAuth } from "../../Config/firebase"
 
 // import MyMapComponent from "./GetMap/GetMap";
-import Modal from '@material-ui/core/Modal';
+import Modal from '../../Components/Models/Models';
 
 import "./style.css"
+import Directions from './GetMap/GetMap';
 
 
 const styles = theme => ({
@@ -64,15 +65,31 @@ const styles = theme => ({
         '&:hover': {
             textDecoration: 'underline',
         },
-    }
+    }, paper: {
+        position: 'absolute',
+        width: theme.spacing.unit * 50,
+        backgroundColor: theme.palette.background.paper,
+        boxShadow: theme.shadows[5],
+        padding: theme.spacing.unit * 4,
+    },
 });
 
+function getModalStyle() {
+    const top = 50;
+    const left = 50;
+
+    return {
+        top: `${top}%`,
+        left: `${left}%`,
+        transform: `translate(-${top}%, -${left}%)`,
+    };
+}
 
 class Locations extends Component {
-    constructor() {
-        super()
+    constructor(props) {
+        super(props)
         this.state = {
-            coords: { latitude: null, longitude: null },
+            coords: { latitude: 24.23223, longitude: 67.323233 },
             destination: {
                 latitude: null, longitude: null
             },
@@ -80,15 +97,17 @@ class Locations extends Component {
             searchLocations: [],
             searchQuery: [],
             expanded: null,
+            open: false
         };
         this.updateCoords = this.updateCoords.bind(this);
-        this.sendData = this.sendData.bind(this);
         this.getUsersData = this.getUsersData.bind(this);
         this.updateText = this.updateText.bind(this);
         this.getSearchData = this.getSearchData.bind(this);
-        this.handleChange = this.handleChange.bind(this);
         this.getNavigation = this.getNavigation.bind(this);
         this.next = this.getNavigation.bind(this)
+        this.handleClose = this.handleClose.bind(this)
+        this.handleOpen = this.handleOpen.bind(this)
+
         this.getUsersData()
         checkAuth()
     }
@@ -163,23 +182,19 @@ class Locations extends Component {
         this.setState({ coords: { latitude, longitude } });
     }
 
-    sendData() {
-        // const { getCurrentLocation } = this.props
-        // const { coords } = this.state
-        // getCurrentLocation(coords)
-    }
-
     componentDidMount() {
         this.getPlaceData()
         // this.getSearchData()
     }
 
-    handleChange(e) {
-        let { expanded } = this.state
-        this.setState({
-            expanded: !this.state.expanded
-        })
-    }
+    handleOpen = () => {
+        this.setState({ open: true });
+    };
+
+    handleClose = () => {
+        this.setState({ open: false });
+    };
+
 
     getNavigation(lat, lng) {
         const { destination } = this.state
@@ -187,13 +202,14 @@ class Locations extends Component {
         destination.longitude = lng
         this.setState({
             destination,
-            showMap: true
+            open: true
         })
         console.log("destination", lat, lng)
     }
+
     render() {
         const { classes } = this.props
-        const { coords, nearLocations, searchQuery, searchLocations, expanded } = this.state
+        const { coords, nearLocations, searchQuery, searchLocations, destination, open } = this.state
         console.log("location", this.state.destination)
         // searchLocations == false ? nearLocations : searchLocations
         return (
@@ -238,6 +254,7 @@ class Locations extends Component {
                         </div>
                     })}
                 </div>
+
                 <div className="searchLocation_div">
                     {searchQuery.length > 0 && searchLocations.map((items, index) => {
                         return <div>
@@ -273,32 +290,20 @@ class Locations extends Component {
                         </div>
                     })}
                 </div>
-                {/* <div style={{ maxWidth: '700px', height: "400px" }}>
-                    <MyMapComponent
-                        updateCoords={this.updateCoords}
+
+                <div style={{ maxWidth: '700px', height: "400px" }}>
+                    <Modal
+                        open={this.state.open}
+                        destination={destination}
                         coords={coords}
-                        isMarkerShown
-                        googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
-                        loadingElement={<div style={{ height: `100%` }} />}
-                        containerElement={<div style={{ height: `400px` }} />}
-                        mapElement={<div style={{ height: `100%` }} />}
-                    />
-                </div> */}
+                        handleClose={this.handleClose}
+                        handleOpen={this.handleOpen} />
+                </div>
             </div>
         );
     }
 }
-/* <div style={{ maxWidth: '700px', height: "400px" }}>
-    <MyMapComponent
-        updateCoords={this.updateCoords}
-        coords={coords}
-        isMarkerShown
-        googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
-        loadingElement={<div style={{ height: `100%` }} />}
-        containerElement={<div style={{ height: `400px` }} />}
-        mapElement={<div style={{ height: `100%` }} />}
-    />
-</div>*/
+
 Locations.propTypes = {
     classes: PropTypes.object.isRequired,
 };

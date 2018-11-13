@@ -41,10 +41,12 @@ class ButtonAppBar extends React.Component {
                         {/* <SideMenu /> */}
                         <Toolbar>
                             <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
-                                <SideMenu />
+                                {/* <MenuIcon /> */}
+                                <SideMenu>
+                                </SideMenu>
                             </IconButton>
                             <Typography variant="h6" color="inherit" className={classes.grow}>
-                                News
+                                MEET UP
                         </Typography>
                             {true ? <Link exact to='/profile/dashboard/K9DwEyp0KRUxofHRaVh17OViU9w2/meeting'><Button style={{ color: 'white', textDecoration: 'underline' }}>Log Out</Button></Link> : <Link exact to='/'><Button color="inherit">Log In</Button></Link>}
                         </Toolbar>

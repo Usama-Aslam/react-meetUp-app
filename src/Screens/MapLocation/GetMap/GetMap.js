@@ -1,64 +1,75 @@
-import React from "react";
-import {
-    lifecycle,
-    withScriptjs,
-    withGoogleMap,
-    GoogleMap,
-    Marker,
-    DirectionsRenderer
-} from "react-google-maps";
+/* eslint-disable no-undef */
+/* global google */
+import React, { Component } from "react";
+import { Button, Typography } from "@material-ui/core";
+import { withGoogleMap, GoogleMap, Marker, DirectionsRenderer, withScriptjs } from "react-google-maps"
 
-const MapWithDirectionComponent = compose(
-    withScriptjs,
-    withGoogleMap,
-    lifecycle({
-        componentDidMount() {
-            const { coords, destination } = props
-            const DirectionsService = new google.maps.DirectionsService();
-
-            DirectionsService.route({
-                origin: new google.maps.LatLng(coords.latitude, coords.longitude),
-                destination: new google.maps.LatLng(destination.latitude, destination.longitude),
-                travelMode: google.maps.TravelMode.DRIVING,
-            }, (result, status) => {
-                if (status === google.maps.DirectionsStatus.OK) {
-                    this.setState({
-                        directions: result,
-                    });
-                } else {
-                    console.error(`error fetching directions ${result}`);
-                }
-            });
+class Directions extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            err: ""
         }
-    })
-)
-    (props =>
-        <GoogleMap
-            defaultZoom={7}
-            defaultCenter={new google.maps.LatLng(41.8507300, -87.6512600)}
-        >
-            {props.directions && <DirectionsRenderer directions={props.directions} />}
-            {props.isMarkerShown &&
-                props.coords && (
-                    <Marker
-                        draggable={false}
-                        position={{
-                            lat: props.coords.latitude,
-                            lng: props.coords.longitude
-                        }}
-                    />
-                )}
-            {props.isMarkerShown &&
-                props.coords && (
-                    <Marker
-                        draggable={false}
-                        position={{
-                            lat: props.destination.latitude,
-                            lng: props.destination.longitude
-                        }}
-                    />
-                )}
-        </GoogleMap>
-    );
+        this.getDirections = this.getDirections.bind(this)
+    }
 
-export default MyMapComponent;
+    getDirections() {
+        const { coords, destination } = this.props
+        const DirectionsService = new google.maps.DirectionsService();
+
+        DirectionsService.route({
+            origin: new google.maps.LatLng(coords.latitude, coords.longitude),
+            destination: new google.maps.LatLng(destination.latitude, destination.longitude),
+            travelMode: google.maps.TravelMode.DRIVING,
+        }, (result, status) => {
+            if (status === google.maps.DirectionsStatus.OK) {
+                this.setState({
+                    directions: result,
+                });
+            } else {
+                this.setState({
+                    err: "Sorry! Can't calculate directions!"
+                })
+            }
+        });
+    }
+
+    render() {
+        const { directions, err } = this.state
+        const { coords, destination } = this.props
+        console.log("erro", err)
+        return (
+            <div>
+                <MyMapComponent
+                    isMarkerShown
+                    googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyBrrOsrvThKXpEt-1ZoAP9DhpwRs1B5l4E&v=3.exp&libraries=geometry,drawing,places"
+                    loadingElement={<div style={{ height: `100%` }} />}
+                    containerElement={<div style={{ height: `400px` }} />}
+                    mapElement={<div style={{ height: `100%` }} />}
+                    directions={directions}
+                    coords={coords}
+                    destination={destination}
+                />
+                <br />
+                <center><Button variant="contained" color="primary" onClick={this.getDirections}>Get Directions</Button></center>
+                <Typography variant="caption" color="secondary" align="right">{err}</Typography>
+            </div>
+        )
+    }
+}
+
+const MyMapComponent = withScriptjs(withGoogleMap((props) =>
+    <GoogleMap
+        defaultZoom={13}
+        center={{ lat: props.coords.latitude, lng: props.coords.longitude }}
+    >
+
+        <Marker position={{ lat: props.coords.latitude, lng: props.coords.longitude }} />
+        <Marker position={{ lat: props.destination.latitude, lng: props.destination.longitude }} />
+
+        {props.directions && <DirectionsRenderer directions={props.directions} />}
+
+    </GoogleMap>
+))
+
+export default Directions

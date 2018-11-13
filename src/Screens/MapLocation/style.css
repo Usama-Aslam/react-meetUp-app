@@ -23,3 +23,8 @@
 .locationAddress_div{
     text-align: left;
 }
+.directionMap{
+    width:340px !important;
+    height:340px !important;
+    background:blue !important;
+}

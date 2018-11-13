@@ -88,9 +88,6 @@ class SwipeableTemporaryDrawer extends React.Component {
                     </CardContent>
                 </CardActionArea>
 
-
-
-
                 <List>
                     <Link to={"/profile/dashboard/K9DwEyp0KRUxofHRaVh17OViU9w2/meeting"}>
                         <ListItem button>
@@ -119,33 +116,9 @@ class SwipeableTemporaryDrawer extends React.Component {
             </div>
         );
 
-        const fullList = (
-            <div className={classes.fullList}>
-                <List>
-                    {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                        <ListItem button key={text}>
-                            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                            <ListItemText primary={text} />
-                        </ListItem>
-                    ))}
-                </List>
-                <Divider />
-                <List>
-                    {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                        <ListItem button key={text}>
-                            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                            <ListItemText primary={text} />
-                        </ListItem>
-                    ))}
-                </List>
-            </div>
-        );
-
         return (
             <div>
-                <MenuIcon onClick={this.toggleDrawer('left', true)}>
-
-                </MenuIcon>
+                <MenuIcon onClick={this.toggleDrawer('left', true)} />
                 <SwipeableDrawer
                     open={this.state.left}
                     onClose={this.toggleDrawer('left', false)}
