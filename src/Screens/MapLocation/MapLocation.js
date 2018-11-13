@@ -20,7 +20,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import { firebase, checkAuth } from "../../Config/firebase"
 
-import MyMapComponent from "./GetMap/GetMap";
+// import MyMapComponent from "./GetMap/GetMap";
+import Modal from '@material-ui/core/Modal';
 
 import "./style.css"
 
@@ -30,7 +31,7 @@ const styles = theme => ({
         ...theme.mixins.gutters(),
         paddingTop: theme.spacing.unit * 1,
         paddingBottom: theme.spacing.unit * 2,
-        width: '100%'
+        // width: '100%'
     }, heading: {
         fontSize: theme.typography.pxToRem(15),
     },
@@ -72,6 +73,9 @@ class Locations extends Component {
         super()
         this.state = {
             coords: { latitude: null, longitude: null },
+            destination: {
+                latitude: null, longitude: null
+            },
             nearLocations: [],
             searchLocations: [],
             searchQuery: [],
@@ -83,7 +87,8 @@ class Locations extends Component {
         this.updateText = this.updateText.bind(this);
         this.getSearchData = this.getSearchData.bind(this);
         this.handleChange = this.handleChange.bind(this);
-        this.newChange = this.newChange.bind(this);
+        this.getNavigation = this.getNavigation.bind(this);
+        this.next = this.getNavigation.bind(this)
         this.getUsersData()
         checkAuth()
     }
@@ -113,7 +118,7 @@ class Locations extends Component {
 
         }).then(() => {
             const { latitude, longitude } = this.state.coords
-            console.log("lattt", latitude, longitude)
+            // console.log("lattt", latitude, longitude)
         })
     }
 
@@ -176,12 +181,20 @@ class Locations extends Component {
         })
     }
 
-    newChange() {
-
+    getNavigation(lat, lng) {
+        const { destination } = this.state
+        destination.latitude = lat
+        destination.longitude = lng
+        this.setState({
+            destination,
+            showMap: true
+        })
+        console.log("destination", lat, lng)
     }
     render() {
         const { classes } = this.props
         const { coords, nearLocations, searchQuery, searchLocations, expanded } = this.state
+        console.log("location", this.state.destination)
         // searchLocations == false ? nearLocations : searchLocations
         return (
             <div>
@@ -210,7 +223,7 @@ class Locations extends Component {
                                     </div>
                                     <ExpansionPanelActions>
                                         <Button size="small"
-                                            onClick={() => { this.getNavigation() }}
+                                            onClick={() => { this.getNavigation(items.venue.location.lat, items.venue.location.lng) }}
                                         >Get Location</Button>
                                         <Button size="small" color="primary"
                                             onClick={() => { this.next() }}
@@ -225,7 +238,7 @@ class Locations extends Component {
                         </div>
                     })}
                 </div>
-                <div className="fastLocation_div">
+                <div className="searchLocation_div">
                     {searchQuery.length > 0 && searchLocations.map((items, index) => {
                         return <div>
                             <ExpansionPanel>
@@ -244,7 +257,7 @@ class Locations extends Component {
                                     </div>
                                     <ExpansionPanelActions>
                                         <Button size="small"
-                                            onClick={() => { this.getNavigation() }}
+                                            onClick={() => { this.getNavigation(items.location.lat, items.location.lng) }}
                                         >Get Location</Button>
                                         <Button
                                             size="small"
@@ -260,30 +273,21 @@ class Locations extends Component {
                         </div>
                     })}
                 </div>
-                <GetDirection />
+                {/* <div style={{ maxWidth: '700px', height: "400px" }}>
+                    <MyMapComponent
+                        updateCoords={this.updateCoords}
+                        coords={coords}
+                        isMarkerShown
+                        googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
+                        loadingElement={<div style={{ height: `100%` }} />}
+                        containerElement={<div style={{ height: `400px` }} />}
+                        mapElement={<div style={{ height: `100%` }} />}
+                    />
+                </div> */}
             </div>
         );
     }
 }
-
-{/* <ExpansionPanel onClick={() => this.handleChange(true)}>
-    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-        <Typography variant="h5" component="h3">{index + 1} : {items.venue.name}</Typography>
-        <ExpansionPanelActions>
-            <Button size="small">Cancel</Button>
-            <Button size="small" color="primary">
-                Save
-                                     </Button>
-        </ExpansionPanelActions>
-    </ExpansionPanelSummary>
-    <ExpansionPanelDetails>
-        <Typography>
-            <b>Cross Street : </b>{items.venue.location.formattedAddress[0]} {items.venue.location.formattedAddress[1]} {items.venue.location.formattedAddress[2]}
-
-        </Typography>
-    </ExpansionPanelDetails>
-</ExpansionPanel> */}
-
 /* <div style={{ maxWidth: '700px', height: "400px" }}>
     <MyMapComponent
         updateCoords={this.updateCoords}
@@ -294,7 +298,7 @@ class Locations extends Component {
         containerElement={<div style={{ height: `400px` }} />}
         mapElement={<div style={{ height: `100%` }} />}
     />
-</div> */
+</div>*/
 Locations.propTypes = {
     classes: PropTypes.object.isRequired,
 };

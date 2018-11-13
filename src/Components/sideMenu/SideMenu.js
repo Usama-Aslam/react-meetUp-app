@@ -32,7 +32,7 @@ import "./style.css";
 //redux
 import { connect } from 'react-redux'
 import { updateUser } from '../../Redux/Action/authAction'
-import { Link, Route } from "react-router-dom"
+import { Link, Route, Router } from "react-router-dom"
 
 const styles = {
     list: {
@@ -92,22 +92,22 @@ class SwipeableTemporaryDrawer extends React.Component {
 
 
                 <List>
-                    <ListItem button>
-                        <ListItemIcon>
-                            <DashboardIcon />
-                        </ListItemIcon>
-                        <Link to={"/profile/dashboard/K9DwEyp0KRUxofHRaVh17OViU9w2/meeting"}>
+                    <Link to={"/profile/dashboard/K9DwEyp0KRUxofHRaVh17OViU9w2/meeting"}>
+                        <ListItem button>
+                            <ListItemIcon>
+                                <DashboardIcon />
+                            </ListItemIcon>
                             <ListItemText primary="Dashboard" />
-                        </Link>
-                    </ListItem>
-                    <ListItem button>
-                        <ListItemIcon>
-                            <MeetingIcon />
-                        </ListItemIcon>
-                        <Link to={"/profile"}>
+                        </ListItem>
+                    </Link>
+                    <Link to={"/profile"}>
+                        <ListItem button>
+                            <ListItemIcon>
+                                <MeetingIcon />
+                            </ListItemIcon>
                             <ListItemText primary="Profile" />
-                        </Link>
-                    </ListItem>
+                        </ListItem>
+                    </Link>
                     <Divider />
                     <ListItem button>
                         <ListItemIcon>

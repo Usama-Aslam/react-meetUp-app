@@ -10,7 +10,9 @@ import MenuIcon from '@material-ui/icons/Menu';
 
 import SideMenu from "./../sideMenu/SideMenu";
 
+import { Link } from 'react-router-dom'
 
+import { BrowserRouter as Router, Route } from "react-router-dom";
 const styles = {
     root: {
         flexGrow: 1,
@@ -32,22 +34,24 @@ class ButtonAppBar extends React.Component {
     render() {
         const { classes } = this.props;
         return (
-            <div className={classes.root}>
-                <AppBar position="static">
-                    {/* <SideMenu /> */}
-                    <Toolbar>
-                        <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
-                            <SideMenu />
-                        </IconButton>
-                        <Typography variant="h6" color="inherit" className={classes.grow}>
-                            News
-          </Typography>
-                        <Button color="inherit">
-                            {false ? "Log Out" : "Login"}
-                        </Button>
-                    </Toolbar>
-                </AppBar>
-            </div >
+            <Router>
+
+                <div className={classes.root}>
+                    <AppBar position="static">
+                        {/* <SideMenu /> */}
+                        <Toolbar>
+                            <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
+                                <SideMenu />
+                            </IconButton>
+                            <Typography variant="h6" color="inherit" className={classes.grow}>
+                                News
+                        </Typography>
+                            {true ? <Link exact to='/profile/dashboard/K9DwEyp0KRUxofHRaVh17OViU9w2/meeting'><Button style={{ color: 'white', textDecoration: 'underline' }}>Log Out</Button></Link> : <Link exact to='/'><Button color="inherit">Log In</Button></Link>}
+                        </Toolbar>
+                    </AppBar>
+                </div >
+
+            </Router>
         );
     }
 }
