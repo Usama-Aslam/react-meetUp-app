@@ -26,6 +26,24 @@ import Modal from '../../Components/Models/Models';
 import "./style.css"
 import Directions from './GetMap/GetMap';
 
+//DateTimePicker
+
+// import moment from "moment";
+// import MomentUtils from '@date-io/moment';
+// import  MuiPickersUtilsProvider from 'material-ui-pickers';
+// import MomentUtils from 'material-ui-pickers/utils/moment-utils';
+
+// import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider';
+
+// import DateTimePicker from 'material-ui-datetimepicker';
+// import DatePickerDialog from 'material-ui/DatePicker/DatePickerDialog'
+// import TimePickerDialog from 'material-ui/TimePicker/TimePickerDialog';
+
+// import { DateRangePicker } from 'material-ui-datetime-range-picker';
+
+// import DatePicker from '../../Components/DatePicker/DatePicker'
+
+// import MaterialDateTimePicker from 'material-datetime-picker';
 
 const styles = theme => ({
     root: {
@@ -97,20 +115,24 @@ class Locations extends Component {
             searchLocations: [],
             searchQuery: [],
             expanded: null,
-            open: false
+            open: false,
+            showTime: false,
+            dateTime: null
         };
         this.updateCoords = this.updateCoords.bind(this);
         this.getUsersData = this.getUsersData.bind(this);
         this.updateText = this.updateText.bind(this);
         this.getSearchData = this.getSearchData.bind(this);
         this.getNavigation = this.getNavigation.bind(this);
-        this.next = this.getNavigation.bind(this)
+        this.next = this.next.bind(this)
         this.handleClose = this.handleClose.bind(this)
         this.handleOpen = this.handleOpen.bind(this)
 
         this.getUsersData()
         checkAuth()
     }
+
+    setDate = (dateTime) => this.setState({ dateTime })
 
     updateText(e) {
         let { searchQuery } = this.state
@@ -207,13 +229,23 @@ class Locations extends Component {
         console.log("destination", lat, lng)
     }
 
+    setDate = (dateTime) => this.setState({ dateTime })
+
+    next() {
+        // const uid = firebase.auth().currentUser.uid
+        this.setState({
+            showTime: true
+        })
+        console.log("fslfsdjk", this.state.showTime)
+    }
     render() {
         const { classes } = this.props
-        const { coords, nearLocations, searchQuery, searchLocations, destination, open } = this.state
+        const { coords, nearLocations, searchQuery, searchLocations, destination, open, showTime } = this.state
         console.log("location", this.state.destination)
         // searchLocations == false ? nearLocations : searchLocations
         return (
             <div>
+
                 <Paper className={classes.root} elevation={1}>
                     <FormControl fullWidth className={classNames(classes.formControl, 'formControl')}>
                         <InputLabel htmlFor="component-simple">Search Nearest Location</InputLabel>
@@ -242,7 +274,7 @@ class Locations extends Component {
                                             onClick={() => { this.getNavigation(items.venue.location.lat, items.venue.location.lng) }}
                                         >Get Location</Button>
                                         <Button size="small" color="primary"
-                                            onClick={() => { this.next() }}
+                                            onClick={() => this.next()}
                                         >
                                             Next
                                     </Button>
@@ -279,7 +311,7 @@ class Locations extends Component {
                                         <Button
                                             size="small"
                                             color="primary"
-                                            onClick={() => { this.next() }}
+                                            onClick={() => this.next()}
                                         >
                                             Next
                                     </Button>
@@ -290,7 +322,6 @@ class Locations extends Component {
                         </div>
                     })}
                 </div>
-
                 <div style={{ maxWidth: '700px', height: "400px" }}>
                     <Modal
                         open={this.state.open}
@@ -299,6 +330,14 @@ class Locations extends Component {
                         handleClose={this.handleClose}
                         handleOpen={this.handleOpen} />
                 </div>
+                {/* <MuiPickersUtilsProvider utils={MomentUtils}>
+                    <DateTimePicker
+                        onChange={this.setDate}
+                        DatePicker={DatePickerDialog}
+                        TimePicker={TimePickerDialog}
+                    />
+                </MuiPickersUtilsProvider> */}
+                {showTime && <p>time</p>}
             </div>
         );
     }
@@ -309,4 +348,5 @@ Locations.propTypes = {
 };
 
 export default withStyles(styles)(Locations);
+
 

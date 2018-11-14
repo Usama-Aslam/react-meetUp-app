@@ -14,9 +14,10 @@ import AppBar from "./Components/appBar/AppBar"
 
 //redux
 import { Provider } from "react-redux";
-import store from './Redux/store'
+import {store,persistor} from './Redux/store'
 import { connect } from "react-redux"
 
+import { PersistGate } from 'redux-persist/integration/react'
 
 class App extends Component {
     constructor() {
@@ -44,10 +45,12 @@ class App extends Component {
         const { loginFlag } = this.state
         return (
             <Provider store={store}>
-                <div className="App">
-                    {!loginFlag && <AppBar />}
-                    <Routes showProfile={this.showProfile} hideProfile={this.hideProfile} />
-                </div >
+                <PersistGate loading={null} persistor={persistor}>
+                    <div className="App">
+                        {!loginFlag && <AppBar />}
+                        <Routes showProfile={this.showProfile} hideProfile={this.hideProfile} />
+                    </div >
+                </PersistGate>
             </Provider>
         );
     }
