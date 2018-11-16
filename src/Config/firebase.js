@@ -15,6 +15,12 @@ var config = {
 
 firebase.initializeApp(config);
 
+// const initFirebase=()=>{
+//     firebase.initializeApp({
+//         messagingSenderId: "130657948638"
+//     });
+// }
+
 const pushData = (obj) => {
     console.log("obj", obj)
     const uid = firebase.auth().currentUser.uid;
@@ -83,7 +89,7 @@ const pushMeetingData = async (sendObj, receiveObj, currentUserUid, clientUid) =
                         title: 'Invitation Sent Successfully'
                     })
                     return true
-                    
+
                 })
 
                 .catch((err) => console.log("error in receiving meeting", err))
@@ -111,5 +117,6 @@ export {
     checkAuth,
     getSpecificUsersData,
     pushMeetingData,
+    // initFirebase
     // getMeetingData
 }

@@ -17,6 +17,9 @@ flex-basis: 30%
 .status_div{
     flex-basis: 20%;   
 }
+.status_div span{
+    color:green !important;
+}
 
 .meetingDate_div{
     flex-basis: 20%
@@ -46,19 +49,61 @@ flex-basis: 30%
     text-align: left !important;
 }
 
-@media(max-width:425px){
+
+@media(max-width:768px){
+.clientName_div{
+    flex-basis: 40%;
+}
  .clientName_div>p{
     font-size: 14px !important;
 }  
 .client_avatar{
-    top:10px;
-    left:3px;
+    top:6px;
+    left:5px;
+}
+.place_div{
+    flex-basis: 30%;
+    /* background: blue; */
 }
 .expansionPanelDetail_div{
     font-size:13px;
 }
 .meetingDate_div{
+    flex-basis: 25%
+}
+.locationAddress_div{
+    flex-basis: 50%
+}
+.locationNavigation_div{
     flex-basis: 20%
+}
+}
+
+
+@media(max-width:425px){
+ .clientName_div>p{
+    font-size: 13px !important;
+}  
+.client_avatar{
+    top:10px;
+    left:3px;
+}
+
+.status_div{
+    flex-basis: 40%;
+}
+
+.status_div span{
+    font-size:12px !important;
+}
+.place_div span{
+    font-size: 12px;
+}
+.expansionPanelDetail_div{
+    font-size:13px;
+}
+.meetingDate_div{
+    flex-basis: 30%
 }
 .locationAddress_div{
     flex-basis: 40%
@@ -70,20 +115,90 @@ flex-basis: 30%
 
 @media(max-width:375px){
  .clientName_div>p{
-    font-size: 14px !important;
+    font-size: 11px !important;
+    margin-top: 4px;
     margin-left:5px;
 }  
+.clientName_div{
+    flex-basis: 40%;
+}
+.place_div{
+    flex-basis: 40%;
+}
+.status_div{
+    flex-basis: 20%;
+}
 .client_avatar{
     top:10px;
     left:3px;
 }
-.meetingDate_div{
-    flex-basis: 3% !important;
-}
+
 .meetingDate_div>p{
-    font-size:13px !important;
+    font-size:12px !important;
 }
 .locationAddress_div>p{
     font-size:13px !important;
 }
+}
+
+@media(max-width:320px){
+ .clientName_div>p{
+    font-size: 10px !important;
+    margin-top: 4px;
+    margin-left:5px;
+}  
+.clientName_div{
+    /* background: blue; */
+}
+.place_div{
+    flex-basis: 40%;
+    margin-top:-2px;
+    /* background: green; */
+}
+.place_div span{
+    font-size: 10px;
+}
+.status_div{
+    margin-top:-4px;
+    flex-basis: 10%;
+}
+
+.status_div span{
+    font-size: 10px !important;
+}
+.client_avatar{
+    top:10px;
+    left:3px;
+}
+
+.meetingDate_div>p{
+    font-size:9px !important;
+}
+.locationAddress_div>p{
+    font-size:10px !important;
+}
+}
+
+/* calender event styling */
+
+.react-add-to-calendar__wrapper{
+    border:1px solid rgb(201, 199, 199);
+    padding:5px;
+    border-radius: 5px;
+}
+.react-add-to-calendar__dropdown{
+    background: rgba(211, 211, 211, 0.411);
+    margin-top:-15px;
+}
+.react-add-to-calendar__dropdown ul{
+    list-style: none !important;
+    /* background: blue; */
+}
+.react-add-to-calendar__dropdown ul{
+    padding:10px;
+    background: rgba(211, 211, 211, 0.411);
+}
+.react-add-to-calendar__dropdown ul li a{
+    text-decoration: none !important;
+    /* background: blue; */
 }

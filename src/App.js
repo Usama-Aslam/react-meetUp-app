@@ -7,6 +7,8 @@ import Profile from './Screens/Profile/Profile';
 // import * as firebase from 'firebase'
 
 import { firebase } from './Config/firebase'
+import { askForPermissionToReceiveNotifications ,messagePayLoad } from './push-notification'
+
 import Routes from "./Config/Router/router";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
@@ -18,6 +20,7 @@ import { store, persistor } from './Redux/store'
 import { connect } from "react-redux"
 
 import { PersistGate } from 'redux-persist/integration/react'
+import { rejects } from 'assert';
 
 class App extends Component {
     constructor() {
@@ -43,12 +46,15 @@ class App extends Component {
     }
     render() {
         const { loginFlag } = this.state
+        // let a = askForPermissionToReceiveNotifications()
+        // let b = messagePayLoad();
         return (
             <Provider store={store}>
                 <PersistGate loading={null} persistor={persistor}>
                     <div className="App">
                         {loginFlag && <AppBar />}
                         <Routes showProfile={this.showProfile} hideProfile={this.hideProfile} />
+                        <button onClick={askForPermissionToReceiveNotifications}>Notification</button>
                     </div >
                 </PersistGate>
             </Provider>

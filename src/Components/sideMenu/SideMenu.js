@@ -89,31 +89,21 @@ class SwipeableTemporaryDrawer extends React.Component {
                 </CardActionArea>
 
                 <List>
-                    <Link to={"/profile/dashboard/K9DwEyp0KRUxofHRaVh17OViU9w2/meeting"}>
-                        <ListItem button>
-                            <ListItemIcon>
-                                <DashboardIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Dashboard" />
-                        </ListItem>
-                    </Link>
-                    <Link to={"/profile"}>
-                        <ListItem button>
-                            <ListItemIcon>
-                                <MeetingIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Profile" />
-                        </ListItem>
-                    </Link>
-                    <Divider />
-                    <ListItem button>
+                    <ListItem button onClick={() => this.props.history.push(`/profile/dashboard/${this.props.user.uid}`)}>
                         <ListItemIcon>
-                            <Ring />
+                            <DashboardIcon />
                         </ListItemIcon>
-                        <ListItemText primary="Request" />
+                        <ListItemText primary="Dashboard" />
+                    </ListItem>
+
+                    <ListItem button onClick={() => this.props.history.push(`/profile`)}>
+                        <ListItemIcon>
+                            <MeetingIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Profile" />
                     </ListItem>
                 </List>
-            </div>
+            </div >
         );
 
         return (

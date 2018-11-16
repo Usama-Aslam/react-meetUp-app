@@ -19,6 +19,10 @@ import { firebase } from '../../Config/firebase'
 import AddIcon from '@material-ui/icons/PersonAdd';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 
+//Redux
+import { connect } from 'react-redux';
+import { updateUser } from '../../Redux/Action/authAction'
+
 
 function TabContainer({ children, dir }) {
     return (
@@ -70,7 +74,22 @@ class FullWidthTabs extends React.Component {
         })
     }
 
+    // checkNotification() {
+    //     if (!window.Notification) {
+    //         alert("notification not supported")
+    //     } else {
+    //         Notification.requestPermission().then(function (p) {
+    //             if (p == 'denied') {
+    //                 alert('you denied to show Notification');
+    //             } else if (p == 'granted') {
+    //                 alert("permission granted")
+    //             }
+    //         })
+    //     }
+    // }
+
     render() {
+        // this.checkNotification()
         const { classes, theme } = this.props;
         const { meetingDeck } = this.state
         console.log("dashmenu props", this.props)
@@ -98,20 +117,28 @@ class FullWidthTabs extends React.Component {
                         {/* //here we are rendering meeting data */}
                         <MeetingData {...this.props} />
                     </TabContainer>
-                    
+
                     <TabContainer dir={theme.direction}>
                         {/* //here we are rendering request data */}
-                        <RequestData />
+                        <RequestData {...this.props} />
                     </TabContainer>
                 </SwipeableViews>
                 <Button
                     variant="extendedFab"
-                    aria-label="Delete"
-                    className={classNames(classes.button, 'extBtn')}
+                    aria-label="startMeeting"
+                    className={classNames(classes.button, 'extBtn_lg')}
                     onClick={this.showMeetingDeck}
                 >
                     <AddIcon className={classes.extendedIcon} />
                     Set Meeting
+                </Button>
+                <Button
+                    variant="extendedFab"
+                    aria-label="Delete"
+                    className={classNames(classes.button, 'extBtn_sm')}
+                    onClick={this.showMeetingDeck}
+                >
+                    <AddIcon className={classes.extendedIcon} />
                 </Button>
             </div >
         );
@@ -123,7 +150,19 @@ FullWidthTabs.propTypes = {
     theme: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles, { withTheme: true })(FullWidthTabs);
+const mapStateToProps = (state) => {
+    console.log("state from component", state)
+    return {
+        user: state.authReducer.user
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        updateUser: (user) => dispatch(updateUser(user))
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles, { withTheme: true })(FullWidthTabs));
 
 
 {/* <Button

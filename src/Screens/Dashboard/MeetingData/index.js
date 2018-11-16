@@ -24,6 +24,8 @@ import logo from '../../../logo.svg';
 
 import Modal from '../../../Components/Models/Models'
 
+//google add event
+import AddToCalendar from 'react-add-to-calendar';
 
 // //redux
 import { connect } from "react-redux"
@@ -79,7 +81,7 @@ const styles = theme => ({
     },
 });
 
-class RequestData extends Component {
+class MeetingData extends Component {
     constructor() {
         super();
         this.state = {
@@ -90,26 +92,26 @@ class RequestData extends Component {
                 latitude: null, longitude: null
             },
             coords: { latitude: null, longitude: null },
-            // meetingNodes: [],
-            meetingNodes: [{
-                clientUid: 'dskfjsfhksdhksd',
-                userUid: "K9DwEyp0KRUxofHRaVh17OViU9w2",
-                avatar: "kfdfsdsfsdfsfsdsdfsd",
-                clientName: "Muhammad Usama",
-                date: [new Date().toLocaleString(), new Date().getTime()],
-                clientlocation: { lat: 23, lng: 55 },
-                mylocation: { lat: 23, lng: 55 },
-                destinationLocation: { lat: 34, lng: 66 },
-                destinationDescription: { meetingPlace: "optp", address: ['baldia', 'town ', 'karachi'] },
-                statuses: "pending"
-            }]
+            meetingNodes: [],
+            // meetingNodes: [{
+            //     clientUid: 'dskfjsfhksdhksd',
+            //     userUid: "K9DwEyp0KRUxofHRaVh17OViU9w2",
+            //     avatar: "kfdfsdsfsdfsfsdsdfsd",
+            //     clientName: "Muhammad Usama",
+            //     date: [new Date().toLocaleString(), new Date().getTime()],
+            //     clientlocation: { lat: 23, lng: 55 },
+            //     mylocation: { lat: 23, lng: 55 },
+            //     destinationLocation: { lat: 34, lng: 66 },
+            //     destinationDescription: { meetingPlace: "callifornia pizaa makers", address: ['baldia', 'town ', 'karachi'] },
+            //     statuses: "Pending"
+            // }],
         }
         this.getNavigation = this.getNavigation.bind(this)
         this.getData();
     }
 
     async getData() {
-        // const uid = firebase.auth().currentUser.uid
+        console.log("this props of get data", this.props)
         const uid = "K9DwEyp0KRUxofHRaVh17OViU9w2"
         let Ref = firebase.database().ref(`Data/${uid}/meeting`)
         let arr = []
@@ -119,7 +121,6 @@ class RequestData extends Component {
             let obj = data.val()
             // arr.push(data.val())
             arr.push(data.val())
-
             for (const key in arr) {
                 for (const keys in arr[key]) {
                     newArr.push(arr[key][keys])
@@ -205,9 +206,26 @@ class RequestData extends Component {
         console.log(desLocation, myLocation)
     }
 
+    // noti() {
+    //     const uid = "K9DwEyp0KRUxofHRaVh17OViU9w2";
+    //     firebase.database().ref(`Data/${uid}/meeting`).on("child_added", data => {
+    //         if (Notification.permission !== 'default') {
+    //             let notify;
+    //             notify = new Notification('CodeWife', {
+    //                 'body': "kia hal hai",
+    //                 'icon': logo,
+    //                 'tag': "dkfsdkl"
+    //             });
+    //         } else {
+    //             alert("please alow notification")
+    //         }
+    //     })
+    // }
+
     setInvitation(clientUid, userUid, key, index, status) {
         const { meetingNodes } = this.state
-        firebase.database().ref("/").child(`Data/${userUid}/meeting/${clientUid}/${key}/statuses`).set(status);
+        firebase.database().ref("/").child(`Data/${userUid}/meeting/${clientUid}/${key}`).remove();
+        // firebase.database().ref("/").child(`Data/${userUid}/meeting/${clientUid}/${key}/statuses`).set(status);
         // delete meetingNodes[index]
         // this.setState({
         //     meetingNodes: this.state.meetingNodes
@@ -220,7 +238,8 @@ class RequestData extends Component {
         const { classes } = this.props
         const { allMeetingData, meetingNodes, destination, coords, keys } = this.state
         // console.log("allMeeting", allMeetingData)
-        // console.log("keys", keys)
+        console.log("props", this.props.user)
+        console.log("nods", meetingNodes)
         return (
             <div>
                 {meetingNodes.length == 0 ?
@@ -250,11 +269,11 @@ class RequestData extends Component {
                                         </div>
 
                                         <div className={classNames('place_div')}>
-                                            <Typography className={classes.secondaryHeading} variant="h5" component="h3">{items.destinationDescription.meetingPlace}</Typography>
+                                            <Typography className={classes.secondaryHeading} variant="h5" component="h3"><span>{items.destinationDescription.meetingPlace}</span></Typography>
                                         </div>
 
                                         <div className={classNames('status_div')}>
-                                            <Typography className={classes.secondaryHeading} variant="h6" component="h6" id={keys[index]}><strong>Status : </strong>{items.statuses}</Typography>
+                                            <Typography className={classes.secondaryHeading} variant="h6" component="h6" id={keys[index]}><span>{items.statuses}</span></Typography>
                                         </div>
                                     </ExpansionPanelSummary>
 
@@ -278,6 +297,20 @@ class RequestData extends Component {
                                     <Divider />
                                     <ExpansionPanelActions>
                                         <Divider />
+                                        <AddToCalendar
+                                            event={{
+                                                title: `Meeting with ${items.clientName}`,
+                                                description: `Today is Your Meeting With ${items.clientName} At ${items.destinationDescription.meetingPlace}`,
+                                                location: `${items.destinationDescription.address}`,
+                                                startTime: new Date(items.date[1]).toLocaleDateString(),
+                                                endTime: new Date(items.date[1]).toLocaleDateString()
+
+                                            }}
+
+                                            listItems={[
+                                                { google: 'Google' }
+                                            ]}
+                                        />
                                         {/* <Button size="small"
                                             onClick={() => {
                                                 this.setInvitation(items.clientUid, items.userUid, keys[index], index, "Cancelled")
@@ -311,14 +344,14 @@ class RequestData extends Component {
     };
 }
 
-RequestData.propTypes = {
+MeetingData.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => {
     console.log("state from component", state)
     return {
-        user: state.user
+        user: state.authReducer.user
     }
 }
 
@@ -327,4 +360,4 @@ const mapDispatchToProps = (dispatch) => {
         updateUser: (user) => dispatch(updateUser(user))
     }
 }
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(RequestData));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(MeetingData));
