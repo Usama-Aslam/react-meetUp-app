@@ -1,0 +1,16 @@
+.meetingTimeDiv{
+    text-align: left;
+    padding:25px;
+    text-transform: capitalize;
+}
+.contentDiv{
+    padding:17px 0 0 0;
+}
+.contentDiv>p{
+    font-size: 18px;
+    padding:5px 0
+}
+.clan{
+    width:260px;
+    font-size:18px;
+}

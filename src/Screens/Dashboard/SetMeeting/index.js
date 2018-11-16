@@ -137,7 +137,7 @@ class SetMeeting extends Component {
             .then((result) => {
                 if (result.value) {
                     const uid = firebase.auth().currentUser.uid
-                    this.props.history.push(`/profile/dashboard/${uid}/meeting/location`);
+                    this.props.history.push(`/profile/dashboard/${uid}/meeting/location`,{usersInfo});
                 }
             })
     };

@@ -28,22 +28,13 @@ import Directions from './GetMap/GetMap';
 
 //DateTimePicker
 
-// import moment from "moment";
-// import MomentUtils from '@date-io/moment';
-// import  MuiPickersUtilsProvider from 'material-ui-pickers';
-// import MomentUtils from 'material-ui-pickers/utils/moment-utils';
+import DateTimePicker from 'react-datetime-picker';
+//
 
-// import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider';
+import DatePickerDialogBox from '../../Components/DatePickerDialogBox/DatePickerDialogBox'
 
-// import DateTimePicker from 'material-ui-datetimepicker';
-// import DatePickerDialog from 'material-ui/DatePicker/DatePickerDialog'
-// import TimePickerDialog from 'material-ui/TimePicker/TimePickerDialog';
-
-// import { DateRangePicker } from 'material-ui-datetime-range-picker';
-
-// import DatePicker from '../../Components/DatePicker/DatePicker'
-
-// import MaterialDateTimePicker from 'material-datetime-picker';
+//sweetAlert2
+import swal from "sweetalert2";
 
 const styles = theme => ({
     root: {
@@ -111,13 +102,18 @@ class Locations extends Component {
             destination: {
                 latitude: null, longitude: null
             },
+            usersInfo: this.props.location.state.usersInfo,
             nearLocations: [],
             searchLocations: [],
             searchQuery: [],
             expanded: null,
             open: false,
             showTime: false,
-            dateTime: null
+            dateTime: null,
+            // date: new Date(),
+            dialogBoxOpen: false,
+            meetingPlace: [],
+            address: []
         };
         this.updateCoords = this.updateCoords.bind(this);
         this.getUsersData = this.getUsersData.bind(this);
@@ -125,14 +121,14 @@ class Locations extends Component {
         this.getSearchData = this.getSearchData.bind(this);
         this.getNavigation = this.getNavigation.bind(this);
         this.next = this.next.bind(this)
-        this.handleClose = this.handleClose.bind(this)
-        this.handleOpen = this.handleOpen.bind(this)
+        this.handleModelClose = this.handleModelClose.bind(this)
+        this.handleModelOpen = this.handleModelOpen.bind(this)
+        this.handleDialogClose = this.handleDialogClose.bind(this)
+        this.handleDialogOpen = this.handleDialogOpen.bind(this)
 
         this.getUsersData()
         checkAuth()
     }
-
-    setDate = (dateTime) => this.setState({ dateTime })
 
     updateText(e) {
         let { searchQuery } = this.state
@@ -209,12 +205,21 @@ class Locations extends Component {
         // this.getSearchData()
     }
 
-    handleOpen = () => {
+    handleModelOpen = () => {
         this.setState({ open: true });
     };
 
-    handleClose = () => {
+    handleModelClose = () => {
         this.setState({ open: false });
+    };
+
+
+    handleDialogOpen = () => {
+        this.setState({ dialogBoxOpen: true });
+    };
+
+    handleDialogClose = () => {
+        this.setState({ dialogBoxOpen: false });
     };
 
 
@@ -229,115 +234,136 @@ class Locations extends Component {
         console.log("destination", lat, lng)
     }
 
-    setDate = (dateTime) => this.setState({ dateTime })
-
-    next() {
+    next(place, address) {
         // const uid = firebase.auth().currentUser.uid
         this.setState({
-            showTime: true
+            showTime: true,
+            dialogBoxOpen: true,
+            meetingPlace: place,
+            address: address
         })
-        console.log("fslfsdjk", this.state.showTime)
+
     }
+
     render() {
         const { classes } = this.props
-        const { coords, nearLocations, searchQuery, searchLocations, destination, open, showTime } = this.state
+        const { coords, nearLocations, searchQuery, searchLocations, destination, open, showTime, usersInfo, dialogBoxOpen, address, meetingPlace } = this.state
         console.log("location", this.state.destination)
+        console.log("route props", usersInfo)
+
         // searchLocations == false ? nearLocations : searchLocations
         return (
             <div>
-
-                <Paper className={classes.root} elevation={1}>
-                    <FormControl fullWidth className={classNames(classes.formControl, 'formControl')}>
-                        <InputLabel htmlFor="component-simple">Search Nearest Location</InputLabel>
-                        <Input id="component-simple" onChange={(e) => this.updateText(e)} />
-                    </FormControl>
-                </Paper>
-                <div className="nearestLocation_div">
-                    {searchQuery.length == 0 && nearLocations.map((items, index) => {
-                        return <div>
-                            <ExpansionPanel>
-                                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                                    <div className={classNames(classes.column, "locationHeading_div")}>
-                                        <Typography className={classes.heading}>{index + 1}- Location</Typography>
-                                    </div>
-                                    <div className={classNames(classes.column, 'locationName_div')}>
-                                        <Typography className={classes.secondaryHeading} variant="h5" component="h3">{items.venue.name}</Typography>
-                                    </div>
-                                </ExpansionPanelSummary>
-                                <ExpansionPanelDetails className={classes.details}>
-                                    <div className={classes.column} />
-                                    <div className={classNames(classes.columnSeconday, "locationAddress_div")}>
-                                        <Typography component="p"> <b>Cross Street : </b>{items.venue.location.formattedAddress[0]} {items.venue.location.formattedAddress[1]} {items.venue.location.formattedAddress[2]}</Typography>
-                                    </div>
-                                    <ExpansionPanelActions>
-                                        <Button size="small"
-                                            onClick={() => { this.getNavigation(items.venue.location.lat, items.venue.location.lng) }}
-                                        >Get Location</Button>
-                                        <Button size="small" color="primary"
-                                            onClick={() => this.next()}
-                                        >
-                                            Next
+                {/* <DatePickerDialogBox
+                    dialogBoxOpen={this.state.dialogBoxOpen}
+                    handleDialogClose={this.handleDialogClose}
+                    handleDialogOpen={this.handleDialogOpen}
+                    usersInfo={usersInfo}
+                /> */}
+                {dialogBoxOpen && <div>
+                    <Paper className={classes.root} elevation={1}>
+                        <FormControl fullWidth className={classNames(classes.formControl, 'formControl')}>
+                            <InputLabel htmlFor="component-simple">Search Nearest Location</InputLabel>
+                            <Input id="component-simple" onChange={(e) => this.updateText(e)} />
+                        </FormControl>
+                    </Paper>
+                    <div className="nearestLocation_div">
+                        {searchQuery.length == 0 && nearLocations.map((items, index) => {
+                            return <div>
+                                <ExpansionPanel>
+                                    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                                        <div className={classNames(classes.column, "locationHeading_div")}>
+                                            <Typography className={classes.heading}>{index + 1}- Location</Typography>
+                                        </div>
+                                        <div className={classNames(classes.column, 'locationName_div')}>
+                                            <Typography className={classes.secondaryHeading} variant="h5" component="h3">{items.venue.name}</Typography>
+                                        </div>
+                                    </ExpansionPanelSummary>
+                                    <ExpansionPanelDetails className={classes.details}>
+                                        <div className={classes.column} />
+                                        <div className={classNames(classes.columnSeconday, "locationAddress_div")}>
+                                            <Typography component="p"> <b>Cross Street : </b>{items.venue.location.formattedAddress[0]} {items.venue.location.formattedAddress[1]} {items.venue.location.formattedAddress[2]}</Typography>
+                                        </div>
+                                        <ExpansionPanelActions>
+                                            <Button size="small"
+                                                onClick={() => { this.getNavigation(items.venue.location.lat, items.venue.location.lng) }}
+                                            >Get Location</Button>
+                                            <Button size="small" color="primary"
+                                                onClick={() => this.next(items.venue.name, items.venue.location.formattedAddress)}
+                                            >
+                                                Next
                                     </Button>
-                                    </ExpansionPanelActions>
-                                </ExpansionPanelDetails>
-                                <Divider />
-                            </ExpansionPanel>
+                                        </ExpansionPanelActions>
+                                    </ExpansionPanelDetails>
+                                    <Divider />
+                                </ExpansionPanel>
 
-                        </div>
-                    })}
-                </div>
+                            </div>
+                        })}
+                    </div>
 
-                <div className="searchLocation_div">
-                    {searchQuery.length > 0 && searchLocations.map((items, index) => {
-                        return <div>
-                            <ExpansionPanel>
-                                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                                    <div className={classNames(classes.column, "locationHeading_div")}>
-                                        <Typography className={classes.heading}>{index + 1}- Location</Typography>
-                                    </div>
-                                    <div className={classNames(classes.column, 'locationName_div')}>
-                                        <Typography className={classes.secondaryHeading} variant="h5" component="h3">{items.name}</Typography>
-                                    </div>
-                                </ExpansionPanelSummary>
-                                <ExpansionPanelDetails className={classes.details}>
-                                    <div className={classes.column} />
-                                    <div className={classNames(classes.columnSeconday, "locationAddress_div")}>
-                                        <Typography component="p"> <b>Cross Street : </b>{items.location.formattedAddress[0]} {items.location.formattedAddress[1]} {items.location.formattedAddress[2]}</Typography>
-                                    </div>
-                                    <ExpansionPanelActions>
-                                        <Button size="small"
-                                            onClick={() => { this.getNavigation(items.location.lat, items.location.lng) }}
-                                        >Get Location</Button>
-                                        <Button
-                                            size="small"
-                                            color="primary"
-                                            onClick={() => this.next()}
-                                        >
-                                            Next
+                    <div className="searchLocation_div">
+                        {searchQuery.length > 0 && searchLocations.map((items, index) => {
+                            return <div>
+                                <ExpansionPanel>
+                                    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                                        <div className={classNames(classes.column, "locationHeading_div")}>
+                                            <Typography className={classes.heading}>{index + 1}- Location</Typography>
+                                        </div>
+                                        <div className={classNames(classes.column, 'locationName_div')}>
+                                            <Typography className={classes.secondaryHeading} variant="h5" component="h3">{items.name}</Typography>
+                                        </div>
+                                    </ExpansionPanelSummary>
+                                    <ExpansionPanelDetails className={classes.details}>
+                                        <div className={classes.column} />
+                                        <div className={classNames(classes.columnSeconday, "locationAddress_div")}>
+                                            <Typography component="p"> <b>Cross Street : </b>{items.location.formattedAddress[0]} {items.location.formattedAddress[1]} {items.location.formattedAddress[2]}</Typography>
+                                        </div>
+                                        <ExpansionPanelActions>
+                                            <Button size="small"
+                                                onClick={() => { this.getNavigation(items.location.lat, items.location.lng) }}
+                                            >Get Location</Button>
+                                            <Button
+                                                size="small"
+                                                color="primary"
+                                                onClick={() => this.next()}
+                                            >
+                                                Next
                                     </Button>
-                                    </ExpansionPanelActions>
-                                </ExpansionPanelDetails>
-                                <Divider />
-                            </ExpansionPanel>
-                        </div>
-                    })}
-                </div>
-                <div style={{ maxWidth: '700px', height: "400px" }}>
-                    <Modal
-                        open={this.state.open}
-                        destination={destination}
-                        coords={coords}
-                        handleClose={this.handleClose}
-                        handleOpen={this.handleOpen} />
-                </div>
-                {/* <MuiPickersUtilsProvider utils={MomentUtils}>
-                    <DateTimePicker
-                        onChange={this.setDate}
-                        DatePicker={DatePickerDialog}
-                        TimePicker={TimePickerDialog}
+                                        </ExpansionPanelActions>
+                                    </ExpansionPanelDetails>
+                                    <Divider />
+                                </ExpansionPanel>
+                            </div>
+                        })}
+                    </div>
+
+                    <div style={{ maxWidth: '700px', height: "400px" }}>
+                        <Modal
+                            open={this.state.open}
+                            destination={destination}
+                            coords={coords}
+                            handleClose={this.handleModelClose}
+                            handleOpen={this.handleModelOpen}
+                        />
+                    </div>
+                </div>}
+                {/* {dialogBoxOpen && <DatePickerDialogBox
+                    dialogBoxOpen={this.state.dialogBoxOpen}
+                    handleDialogClose={this.handleDialogClose}
+                    handleDialogOpen={this.handleDialogOpen}
+                    usersInfo={usersInfo}
+                />} */}
+                {!dialogBoxOpen &&
+                    <DatePickerDialogBox
+                        dialogBoxOpen={this.state.dialogBoxOpen}
+                        handleDialogClose={this.handleDialogClose}
+                        usersInfo={usersInfo}
+                        address={address}
+                        meetingPlace={meetingPlace}
                     />
-                </MuiPickersUtilsProvider> */}
-                {showTime && <p>time</p>}
+                }
+
             </div>
         );
     }

@@ -5,65 +5,65 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Slide from '@material-ui/core/Slide';
 
-function Transition(props) {
-    return <Slide direction="up" {...props} />;
-}
 
-class AlertDialogSlide extends React.Component {
+//DatePicker
+import DateTimePicker from 'react-datetime-picker';
 
+class AlertDialog extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            open: this.props.dialogOpen,
-        };
-    }
-
-    static getDerivedStateFromProps(nextProps) {
-        return {
-            open: nextProps.dialogOpen
+            open: this.props.dialogBoxOpen,
+            date: new Date()
         }
+        this.onChange = this.onChange.bind(this)
     }
 
     handleClickOpen = () => {
-        this.setState({ open: true });
+        this.props.handleDialogOpen()
     };
 
     handleClose = () => {
-        this.setState({ open: false });
+        this.props.handleDialogClose()
     };
 
+    onChange = date => {
+        this.setState({ date })
+    }
+
     render() {
-        console.log("props", this.props)
-        let { dialogOpen, usersInfo } = this.props
+        const { usersInfo } = this.props
         return (
-            <div>
-                {console.log("my dialog", dialogOpen)}
-                {console.log("my open", this.state.open)}
+            <div className="dialogDiv1">
+                <Button onClick={this.handleClickOpen}>Open alert dialog</Button>
                 <Dialog
-                    open={this.state.open}
-                    TransitionComponent={Transition}
-                    keepMounted
-                    onClose={() => this.handleClose}
-                    aria-labelledby="alert-dialog-slide-title"
-                    aria-describedby="alert-dialog-slide-description"
+                    className="dialogDiv2"
+                    open={this.props.dialogBoxOpen}
+                    onClose={this.handleClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
                 >
-                    <DialogTitle id="alert-dialog-slide-title">
-                        {"Use Google's location service?"}
-                    </DialogTitle>
-                    <DialogContent>
-                        <DialogContentText id="alert-dialog-slide-description">
-                            Do you want to start the meeting with ?
-            </DialogContentText>
+                    <DialogTitle
+                        id="alert-dialog-title">{"Please Select Respective Date and Time"}</DialogTitle>
+                    <DialogContent className="dialogDiv">
+                        <DialogContentText id="alert-dialog-description">
+                            <DateTimePicker
+                                onChange={this.onChange}
+                                value={this.state.date}
+                                calendarClassName="clan"
+                            />
+                            <br />
+                            Let your {usersInfo.displayName} Know When Do You Want To Meet Him.
+                        </DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={() => this.handleClose} color="primary">
+                        <Button onClick={this.handleClose} color="primary">
                             Disagree
-            </Button>
-                        <Button onClick={() => this.handleClose} color="primary">
+                        </Button>
+                        <Button onClick={this.handleClose} color="primary" autoFocus>
                             Agree
-            </Button>
+                        </Button>
                     </DialogActions>
                 </Dialog>
             </div>
@@ -71,4 +71,4 @@ class AlertDialogSlide extends React.Component {
     }
 }
 
-export default AlertDialogSlide;
+export default AlertDialog;
