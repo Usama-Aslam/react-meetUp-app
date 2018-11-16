@@ -96,14 +96,9 @@ class SetMeeting extends Component {
         })
     }
 
-    componentWillMount() {
-        // this.getUsersData()
-        // setTimeout(() => {
-
-        //     console.log("a", this.state.allUsers)
-        // }, 3000);
+    componentWillUnmount() {
+        firebase.database().ref(`Registration/`).off();
     }
-
 
     action(items) {
         // console.log("duck", items)
@@ -118,9 +113,9 @@ class SetMeeting extends Component {
         console.log("removed", index)
     }
 
-    reqMeeting() {
-        console.log("startMeeting")
-    }
+    // reqMeeting() {
+    //     console.log("startMeeting")
+    // }
 
     reqMeeting = (usersInfo) => {
         this.setState({ dialogOpen: true });
@@ -137,7 +132,7 @@ class SetMeeting extends Component {
             .then((result) => {
                 if (result.value) {
                     const uid = firebase.auth().currentUser.uid
-                    this.props.history.push(`/profile/dashboard/${uid}/meeting/location`,{usersInfo});
+                    this.props.history.push(`/profile/dashboard/${uid}/meeting/location`, { usersInfo });
                 }
             })
     };
@@ -176,29 +171,6 @@ class SetMeeting extends Component {
         const { meetingDeck, allUsers } = this.state
         return (
             <div className="meetingTab">
-                {!meetingDeck &&
-                    <div> <div>
-                        <Typography variant="h4">
-                            Meeting Tab
-                    </Typography>
-                        <Typography>
-                            Manage All Your Meetings At One Place
-                    </Typography>
-                    </div>
-                        <Typography variant="h5">
-                            “You haven’t done any meeting yet!”, try creating a new meeting!
-                    </Typography>
-                    </div>
-                }
-                <Button
-                    variant="extendedFab"
-                    aria-label="Delete"
-                    className={classNames(classes.button, "floatBtn")}
-                    onClick={this.showMeetingDeck}
-                >
-                    {!meetingDeck ? <AddIcon className={classes.extendedIcon} /> : <AccountCircle className={classes.extendedIcon} />}
-                    {!meetingDeck ? "Set Meeting" : "Cancel Meeting"}
-                </Button>
                 {/* meeting cards */}
                 <div>
                     {meetingDeck && this.swipeCard()}

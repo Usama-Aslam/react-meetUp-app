@@ -25,7 +25,7 @@ class Login extends Component {
         super(props);
         this.getUsersData = this.getUsersData.bind(this)
     }
-
+    //getting data of all users from registration from firebase 
     getUsersData() {
         const uid = firebase.auth().currentUser.uid;
         firebase.database().ref(`Registration/`).on("child_added", data => {
@@ -33,6 +33,7 @@ class Login extends Component {
             console.log("getting--", obj)
         })
     }
+
 
     login() {
         var provider = new firebase.auth.FacebookAuthProvider();
@@ -54,13 +55,16 @@ class Login extends Component {
 
                 const uid = firebase.auth().currentUser.uid
                 this.props.updateUser(user)
-
+                //pushing data in registration
                 firebase.database().ref("/Registration/").once("value", snapshot => {
                     if (snapshot.hasChild(uid)) {
-                        this.props.history.replace(`/profile/dashboard/${uid}/meeting`)
+                        //checking if the user already exist. if yes get to dashboard
+                        this.props.history.replace(`/profile/dashboard/${uid}`)
+                        //for rending AppBar use loginStateFunction
                         this.props.loginStateFunction()
                     }
                     else {
+                        //if user is not in registration get him to profile
                         this.props.history.replace("/profile")
                         this.props.loginStateFunction()
                     }

@@ -14,7 +14,7 @@ import AppBar from "./Components/appBar/AppBar"
 
 //redux
 import { Provider } from "react-redux";
-import {store,persistor} from './Redux/store'
+import { store, persistor } from './Redux/store'
 import { connect } from "react-redux"
 
 import { PersistGate } from 'redux-persist/integration/react'
@@ -47,7 +47,7 @@ class App extends Component {
             <Provider store={store}>
                 <PersistGate loading={null} persistor={persistor}>
                     <div className="App">
-                        {!loginFlag && <AppBar />}
+                        {loginFlag && <AppBar />}
                         <Routes showProfile={this.showProfile} hideProfile={this.hideProfile} />
                     </div >
                 </PersistGate>
@@ -56,16 +56,4 @@ class App extends Component {
     }
 }
 
-// const mapStateToProps = (state) => {
-//     return {
-//         user: state.authReducer.user
-//     }
-// }
-
-// const mapDispatchToProps = (dispatch) => {
-//     return {
-//         // updateState: (user)=>dispatch(updateUser(user))
-//     }
-// }
-// export default connect(mapStateToProps, mapDispatchToProps)(App);
 export default App;

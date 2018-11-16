@@ -12,6 +12,7 @@ class Dashboard extends Component {
     }
 
     render() {
+        //we are sending route props and other props to dashboard menu. meeting and request
         return (
             <div>
                 <DashboardMenu {...this.props} />

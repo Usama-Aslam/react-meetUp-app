@@ -4,3 +4,8 @@
     width:100%;
     height: 90%;
 }
+.extBtn{
+    position: fixed !important;
+    bottom: 10px;
+    right:10px;
+}

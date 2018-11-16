@@ -71,7 +71,7 @@ class SwipeableTemporaryDrawer extends React.Component {
             <div className={classes.list}>
 
                 <CardActionArea>
-                    <Avatar alt="Remy Sharp" src="{user.photoURL}" className="sideBar_avatar" />
+                    <Avatar alt="Remy Sharp" src={user.photoURL} className="sideBar_avatar" />
                     <CardMedia
                         className={classes.media}
                         image=""
@@ -79,11 +79,11 @@ class SwipeableTemporaryDrawer extends React.Component {
                     />
                     <CardContent>
                         <Typography component="p" className="user_nickName">
-                            {/* {user.displayName} */}
+                            {user.displayName}
                         </Typography>
 
                         <Typography component="p" className="user_email">
-                            {/* {user.email} */}
+                            {user.email}
                         </Typography>
                     </CardContent>
                 </CardActionArea>

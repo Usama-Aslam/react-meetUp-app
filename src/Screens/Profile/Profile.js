@@ -14,19 +14,21 @@ import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
+// import Card from '@material-ui/core/Card';
+// import CardActions from '@material-ui/core/CardActions';
+// import CardContent from '@material-ui/core/CardContent';
+// import CardMedia from '@material-ui/core/CardMedia';
 
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import ListItemText from '@material-ui/core/ListItemText';
-import Checkbox from '@material-ui/core/Checkbox';
-import IconButton from '@material-ui/core/IconButton';
+// import List from '@material-ui/core/List';
+// import ListItem from '@material-ui/core/ListItem';
+// import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+// import ListItemText from '@material-ui/core/ListItemText';
+// import Checkbox from '@material-ui/core/Checkbox';
+// import IconButton from '@material-ui/core/IconButton';
 
-import CustomUploadButton from "react-firebase-file-uploader/lib/CustomUploadButton";
+//library for fileUploading
+
+// import CustomUploadButton from "react-firebase-file-uploader/lib/CustomUploadButton";
 // import FileUploader from "react-firebase-file-uploader";
 
 import { firebase, pushData } from "../../Config/firebase"
@@ -105,10 +107,6 @@ class Profile extends Component {
         this.getCurrentLocation = this.getCurrentLocation.bind(this)
     }
 
-    componentDidMount() {
-
-    }
-
     handleNext = () => {
         this.setState(state => ({
             activeStep: state.activeStep + 1,
@@ -125,8 +123,10 @@ class Profile extends Component {
         // this.setState({
         //     activeStep: 0,
         // });
+
+        //we are sending data to firebase to registration
         pushData(this.state.obj)
-        this.props.history.replace(`/profile/dashboard/${this.props.user.uid}/meeting`)
+        this.props.history.replace(`/profile/dashboard/${this.props.user.uid}`)
     };
 
     getSteps() {
@@ -137,6 +137,7 @@ class Profile extends Component {
         const { obj } = this.state;
         const { durations } = obj
 
+        //updating the durations and also retaining all other properties of obj
         this.setState({
             obj: { ...obj, durations: [...e.target.value] }
         })
@@ -144,7 +145,7 @@ class Profile extends Component {
 
     updateBeverage(element) {
         let { bev } = this.state.obj
-
+        //adding data to beverages bev
         bev.push(element)
 
         this.setState({
@@ -155,7 +156,7 @@ class Profile extends Component {
 
     removeBeverage(element) {
         let { bev } = this.state.obj
-
+        //removing data from beverages bev
         bev.splice(bev.indexOf(element), 1)
 
         this.setState({
@@ -189,7 +190,7 @@ class Profile extends Component {
     updateImageUrl(downloadURL, fileN) {
         const { images } = this.state.obj
         images[fileN].avatarURL = downloadURL
-
+        //url and index number are receiving from child and setState here
         this.setState({
             images
         })
@@ -204,16 +205,12 @@ class Profile extends Component {
 
         this.setState({ location })
 
-        console.log("ccc", this.state.obj)
-        console.log("ccc", c)
-
     }
     //finish step4
 
     getStepContent(step) {
         const { classes } = this.props;
         const { checked, img, phone, nickName, fileName, obj } = this.state;
-
 
         switch (step) {
             case 0:
@@ -283,7 +280,7 @@ class Profile extends Component {
                 </Stepper>
                 {activeStep === steps.length && (
                     <Paper square elevation={0} className={classes.resetContainer}>
-                        <Typography>All steps completed - you&quot;re finished the process</Typography>
+                        <Typography>All steps completed - you&quot;ve finished the process</Typography>
                         <Button onClick={this.handleReset} className={classNames(classes.button, classes.cssRoot)} size="large">
                             Submit
                         </Button>
@@ -297,7 +294,6 @@ Profile.propTypes = {
     classes: PropTypes.object,
 };
 
-// export default withStyles(styles)(Profile)
 const mapStateToProps = (state) => {
     return {
         user: state.authReducer.user

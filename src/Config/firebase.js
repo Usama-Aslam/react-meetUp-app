@@ -1,6 +1,8 @@
 import { duration } from "@material-ui/core/styles/transitions";
 import * as firebase from 'firebase'
 
+import swal from 'sweetalert2'
+
 var config = {
     apiKey: "AIzaSyBrT1tgitCyiTJ5lwxMFIfsaoXjmL09-fQ",
     authDomain: "reactmeetup-pk.firebaseapp.com",
@@ -34,6 +36,12 @@ const pushData = (obj) => {
         })
     console.log("obj----", obj)
 }
+const toast = swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: true,
+    timer: 3000
+});
 
 const getUsersData = () => {
     const uid = firebase.auth().currentUser.uid;
@@ -42,6 +50,46 @@ const getUsersData = () => {
         // console.log(obj)
         return obj
     })
+}
+
+const getSpecificUsersData = (uid) => {
+    // const uid = firebase.auth().currentUser.uid;
+    return firebase.database().ref(`Registration/${uid}`).once("value", data => {
+        let obj = data.val()
+        // console.log(obj)
+        return obj
+    })
+}
+
+// const getMeetingData = (uid) => {
+//     // const uid = firebase.auth().currentUser.uid;
+//     return firebase.database().ref(`Data/${uid}/meeting`).on("child_added", data => {
+//         let obj = data.val()
+//         // console.log(obj)
+//         return obj
+//     })
+// }
+
+const pushMeetingData = async (sendObj, receiveObj, currentUserUid, clientUid) => {
+
+    return await firebase.database().ref("/").child(`Data/${currentUserUid}/meeting/${clientUid}`).push(sendObj)
+        .then((data) => {
+            console.log("meeting requested")
+
+            firebase.database().ref("/").child(`Data/${clientUid}/request/${currentUserUid}/${data.key}`).set(receiveObj)
+                .then(() => {
+                    toast({
+                        type: 'success',
+                        title: 'Invitation Sent Successfully'
+                    })
+                    return true
+                    
+                })
+
+                .catch((err) => console.log("error in receiving meeting", err))
+            return true
+        })
+        .catch((err) => console.log("error in sending meeting"))
 }
 
 const checkAuth = () => {
@@ -60,5 +108,8 @@ export {
     firebase,
     pushData,
     getUsersData,
-    checkAuth
+    checkAuth,
+    getSpecificUsersData,
+    pushMeetingData,
+    // getMeetingData
 }

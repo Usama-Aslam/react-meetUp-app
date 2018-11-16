@@ -1,18 +1,24 @@
 import React from 'react';
+import "./style.css";
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import SwipeableViews from 'react-swipeable-views';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
+import Button from '@material-ui/core/Button';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
+import classNames from 'classnames';
 
 import MeetingData from '../../Screens/Dashboard/MeetingData/index'
 import RequestData from '../../Screens/Dashboard/RequestData/index'
 
-import SetMeeting from '../../Screens/Dashboard/SetMeeting/index'
+import { firebase } from '../../Config/firebase'
 
-import "./style.css";
+
+import AddIcon from '@material-ui/icons/PersonAdd';
+import AccountCircle from '@material-ui/icons/AccountCircle';
+
 
 function TabContainer({ children, dir }) {
     return (
@@ -31,11 +37,21 @@ const styles = theme => ({
     root: {
         backgroundColor: theme.palette.background.paper,
     },
+    button: {
+        margin: theme.spacing.unit,
+        // position: 'fixed',
+        // bottom: theme.spacing.unit * 2,
+        // right: theme.spacing.unit * 2,
+    },
+    extendedIcon: {
+        marginRight: theme.spacing.unit,
+    },
 });
 
 class FullWidthTabs extends React.Component {
     state = {
         value: 0,
+        meetingDeck: true
     };
 
     handleChange = (event, value) => {
@@ -46,10 +62,18 @@ class FullWidthTabs extends React.Component {
         this.setState({ value: index });
     };
 
+    showMeetingDeck = (event) => {
+        const uid = firebase.auth().currentUser.uid
+        this.props.history.push(`/profile/dashboard/${uid}/meeting`);
+        this.setState({
+            meetingDeck: !this.state.meetingDeck
+        })
+    }
 
     render() {
         const { classes, theme } = this.props;
-        console.log("dashmenu", this.props)
+        const { meetingDeck } = this.state
+        console.log("dashmenu props", this.props)
         return (
             <div className={classes.root}>
                 <AppBar position="static" color="default">
@@ -71,13 +95,24 @@ class FullWidthTabs extends React.Component {
                     onChangeIndex={this.handleChangeIndex}
                 >
                     <TabContainer dir={theme.direction}>
-                        <SetMeeting {...this.props} />
-                        <MeetingData {...this.props}/>
+                        {/* //here we are rendering meeting data */}
+                        <MeetingData {...this.props} />
                     </TabContainer>
+                    
                     <TabContainer dir={theme.direction}>
-                        {/* <RequestData /> */}
+                        {/* //here we are rendering request data */}
+                        <RequestData />
                     </TabContainer>
                 </SwipeableViews>
+                <Button
+                    variant="extendedFab"
+                    aria-label="Delete"
+                    className={classNames(classes.button, 'extBtn')}
+                    onClick={this.showMeetingDeck}
+                >
+                    <AddIcon className={classes.extendedIcon} />
+                    Set Meeting
+                </Button>
             </div >
         );
     }
@@ -89,3 +124,14 @@ FullWidthTabs.propTypes = {
 };
 
 export default withStyles(styles, { withTheme: true })(FullWidthTabs);
+
+
+{/* <Button
+    variant="extendedFab"
+    aria-label="Delete"
+    className={classNames(classes.button, "floatBtn")}
+    onClick={this.showMeetingDeck}
+>
+    {!meetingDeck ? <AddIcon className={classes.extendedIcon} /> : <AccountCircle className={classes.extendedIcon} />}
+    {!meetingDeck ? "Set Meeting" : "Cancel Meeting"}
+</Button> */}

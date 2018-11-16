@@ -234,15 +234,18 @@ class Locations extends Component {
         console.log("destination", lat, lng)
     }
 
-    next(place, address) {
-        // const uid = firebase.auth().currentUser.uid
+    next(place, address, desLocation) {
+        const uid = firebase.auth().currentUser.uid
+        const { destination } = this.state
+        destination.latitude = desLocation.lat
+        destination.longitude = desLocation.lng
         this.setState({
             showTime: true,
             dialogBoxOpen: true,
             meetingPlace: place,
+            destination,
             address: address
         })
-
     }
 
     render() {
@@ -254,13 +257,7 @@ class Locations extends Component {
         // searchLocations == false ? nearLocations : searchLocations
         return (
             <div>
-                {/* <DatePickerDialogBox
-                    dialogBoxOpen={this.state.dialogBoxOpen}
-                    handleDialogClose={this.handleDialogClose}
-                    handleDialogOpen={this.handleDialogOpen}
-                    usersInfo={usersInfo}
-                /> */}
-                {dialogBoxOpen && <div>
+                {!dialogBoxOpen && <div>
                     <Paper className={classes.root} elevation={1}>
                         <FormControl fullWidth className={classNames(classes.formControl, 'formControl')}>
                             <InputLabel htmlFor="component-simple">Search Nearest Location</InputLabel>
@@ -289,7 +286,7 @@ class Locations extends Component {
                                                 onClick={() => { this.getNavigation(items.venue.location.lat, items.venue.location.lng) }}
                                             >Get Location</Button>
                                             <Button size="small" color="primary"
-                                                onClick={() => this.next(items.venue.name, items.venue.location.formattedAddress)}
+                                                onClick={() => this.next(items.venue.name, items.venue.location.formattedAddress, items.venue.location)}
                                             >
                                                 Next
                                     </Button>
@@ -326,7 +323,7 @@ class Locations extends Component {
                                             <Button
                                                 size="small"
                                                 color="primary"
-                                                onClick={() => this.next()}
+                                                onClick={() => this.next(items.name, items.location.formattedAddress, items.location)}
                                             >
                                                 Next
                                     </Button>
@@ -345,25 +342,22 @@ class Locations extends Component {
                             coords={coords}
                             handleClose={this.handleModelClose}
                             handleOpen={this.handleModelOpen}
+                            {...this.props}
                         />
                     </div>
                 </div>}
-                {/* {dialogBoxOpen && <DatePickerDialogBox
-                    dialogBoxOpen={this.state.dialogBoxOpen}
-                    handleDialogClose={this.handleDialogClose}
-                    handleDialogOpen={this.handleDialogOpen}
-                    usersInfo={usersInfo}
-                />} */}
-                {!dialogBoxOpen &&
+
+                {dialogBoxOpen &&
                     <DatePickerDialogBox
                         dialogBoxOpen={this.state.dialogBoxOpen}
                         handleDialogClose={this.handleDialogClose}
                         usersInfo={usersInfo}
                         address={address}
                         meetingPlace={meetingPlace}
+                        destination={destination}
+                        {...this.props}
                     />
                 }
-
             </div>
         );
     }

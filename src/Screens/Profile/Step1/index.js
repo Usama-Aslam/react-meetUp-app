@@ -22,15 +22,11 @@ class Steps1 extends Component {
     constructor(props) {
         super(props);
     }
-    // static getDerivedStateFromProps(props, state) {
-    //     console.log("nextProps", props)
-    //     console.log("nextState", state)
-    // }
+
     render() {
         const { classes, updateText } = this.props;
 
-        // console.log(this.props);
-
+        //we are sending id and value to use only one function for updating text
         return (
             < form noValidate autoComplete="off" >
                 <Grid container spacing={8} alignItems="flex-end">

@@ -12,8 +12,11 @@ import { withStyles } from '@material-ui/core/styles';
 import DateTimePicker from 'react-datetime-picker';
 
 //firebase
-import { firebase } from '../../Config/firebase'
+import { firebase, pushMeetingData, getSpecificUsersData } from '../../Config/firebase'
 
+//redux
+import { connect } from 'react-redux'
+import { updateUser } from "../../Redux/Action/authAction"
 
 const styles = {
     title: {
@@ -29,25 +32,81 @@ class DatePickerDialogBox extends React.Component {
         super(props)
         this.state = {
             open: this.props.dialogBoxOpen,
-            date: new Date()
+            date: new Date(),
+            currentUserData: []
         }
         this.onChange = this.onChange.bind(this)
+        this.sendInvitation = this.sendInvitation.bind(this)
     }
 
-    sendInvitation = () => {
+    sendInvitation = async () => {
+        const currentUserUid = firebase.auth().currentUser.uid
 
+        await getSpecificUsersData(currentUserUid)
+            .then((data) => {
+                this.setState({
+                    currentUserData: data.val()
+                })
+            })
+
+        const { date, currentUserData } = this.state
+        const { destination, usersInfo, address, meetingPlace, user } = this.props
+        const clientUid = usersInfo.uid;
+        console.log("destination",destination)
+        console.log("meetingplace address", meetingPlace, address)
+
+        console.log("thisdata", currentUserData.displayName)
+        //obj for sending person
+        let sendObj = {
+            clientUid: usersInfo.uid,
+            userUid: currentUserUid,
+            avatar: usersInfo.avatar,
+            clientName: usersInfo.displayName,
+            date: [date.toLocaleString(), date.getTime()],
+            clientlocation: { lat: usersInfo.location.lat, lng: usersInfo.location.lng },
+            myLocation: { lat: currentUserData.location.lat, lng: currentUserData.location.lng },
+            destinationLocation: { lat: destination.latitude, lng: destination.longitude },
+            destinationDescription: { meetingPlace, address },
+            statuses: "pending"
+        }
+        //obj for receiving person
+        let receiveObj = {
+            clientUid: currentUserUid,
+            userUid: usersInfo.uid,
+            avatar: currentUserData.avatar,
+            clientName: currentUserData.displayName,
+            date: [date.toLocaleString(), date.getTime()],
+            clientlocation: { lat: currentUserData.location.lat, lng: currentUserData.location.lng },
+            myLocation: { lat: usersInfo.location.lat, lng: usersInfo.location.lng },
+            destinationLocation: { lat: destination.latitude, lng: destination.longitude },
+            destinationDescription: { meetingPlace, address },
+            statuses: "pending"
+        }
+        pushMeetingData(sendObj, receiveObj, currentUserUid, clientUid)
+            .then((flag) => {
+                if (flag) {
+                    const uid = firebase.auth().currentUser.uid
+                    this.props.history.replace(`/profile/dashboard/${uid}`)
+                }
+            })
     };
 
+    //to get back to searching location
     goBack = () => {
         this.props.handleDialogClose()
     };
 
+    //for changing date
     onChange = date => {
         this.setState({ date })
+    }
+    componentWillUnmount(){
+        firebase.database().ref("/").off()
     }
 
     render() {
         const { usersInfo, classes, address, meetingPlace } = this.props
+        console.log("dateprops", this.props)
         return (
             <div className="meetingTimeDiv">
                 <Typography variant="h5" component="h2">
@@ -86,7 +145,7 @@ class DatePickerDialogBox extends React.Component {
                 </div>
                 <CardActions>
                     <Button size="small" onClick={this.goBack}>Back</Button>
-                    <Button size="small" color="secondary" onClick={this.sendInvitation}>Send Invitation</Button>
+                    <Button size="small" color="primary" onClick={() => this.sendInvitation()}>Send Invitation</Button>
                 </CardActions>
             </div>
         );
@@ -96,4 +155,21 @@ DatePickerDialogBox.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(DatePickerDialogBox);
+// export default withStyles(styles)(DatePickerDialogBox);
+
+const mapStateToProps = (state) => {
+    console.log('state from component', state)
+    return {
+        user: state.authReducer.user
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        updateUser: (user) => dispatch(updateUser(user))
+    }
+}
+
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(DatePickerDialogBox))

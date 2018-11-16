@@ -91,9 +91,11 @@ class MultipleSelect extends Component {
     static getDerivedStateFromProps(nextState, nextProps) {
         console.log("next", nextState)
     }
+
     handleChange = event => {
         const { updateDuration } = this.props
         updateDuration(event)
+        
         const { name } = this.state
         this.setState({ name: event.target.value })
     };
@@ -109,7 +111,8 @@ class MultipleSelect extends Component {
         this.setState({
             checked
         })
-        console.log(checked[index].check)
+        // console.log(checked[index].check)
+        //if check is true beverage is pushed and if unchecked it is removed from parent state.
         checked[index].check ? updateBeverage(checked[index].drink) : removeBeverage(checked[index].drink)
     };
 
