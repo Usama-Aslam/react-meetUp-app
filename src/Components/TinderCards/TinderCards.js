@@ -47,10 +47,11 @@ class TinderCards extends Component {
 
     render() {
         const { classes, usersInfo, removeUser, reqMeeting, userIndex } = this.props
+        console.log("users", usersInfo)
         return (
             <div>
                 <Card className={classNames(classes.card, "swipeCard")}>
-                    {console.log(usersInfo.images[0].avatarURL)}
+                    {console.log("dfsdsffsd",usersInfo.images[0].avatarURL)}
                     <CardActionArea>
                         <Carousel usersImage={usersInfo.images} />
                     </CardActionArea>

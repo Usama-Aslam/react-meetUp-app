@@ -6,6 +6,9 @@ import DashboardMenu from "../../Components/DashboardMenu/DashboardMenu.js"
 import { connect } from "react-redux"
 import { updateUser } from "../../Redux/Action/authAction"
 
+//appbar
+import AppBar from '../../Components/appBar/AppBar'
+
 class Dashboard extends Component {
     constructor() {
         super();
@@ -15,6 +18,7 @@ class Dashboard extends Component {
         //we are sending route props and other props to dashboard menu. meeting and request
         return (
             <div>
+                {/* <AppBar {...this.props}/> */}
                 <DashboardMenu {...this.props} />
             </div>
         );

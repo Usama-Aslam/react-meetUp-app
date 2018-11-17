@@ -47,6 +47,9 @@ import green from '@material-ui/core/colors/green';
 import { connect } from 'react-redux'
 import { updateUser } from '../../Redux/Action/authAction'
 
+//appbar
+import AppBar from '../../Components/appBar/AppBar'
+
 const styles = theme => ({
     root: {
         width: '100%',
@@ -247,6 +250,7 @@ class Profile extends Component {
 
         return (
             <div className={classNames(classes.root, "stepperDiv")}>
+                {/* <AppBar {...this.props} /> */}
                 <Stepper activeStep={activeStep} orientation="vertical">
                     {steps.map((label, index) => {
                         return (

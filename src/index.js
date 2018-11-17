@@ -3,7 +3,14 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+
 import { firebase } from './Config/firebase'
+
+import { Provider } from "react-redux";
+import { store, persistor } from './Redux/store'
+import { connect } from "react-redux"
+
+import { PersistGate } from 'redux-persist/integration/react'
 // import * as firebase from 'firebase'
 
 // var config = {
@@ -18,7 +25,16 @@ import { firebase } from './Config/firebase'
 // firebase.initializeApp(config);
 
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(
+    // <Provider store={store}>
+    //     <PersistGate loading={null} persistor={persistor}>
+    //         <div className="App">
+    //             <App />
+    //         </div >
+    //     </PersistGate>
+    // </Provider>
+    <App />
+    , document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

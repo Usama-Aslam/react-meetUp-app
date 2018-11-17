@@ -47,23 +47,23 @@ class Login extends Component {
                 var token = result.credential.accessToken;
                 // The signed-in user info.
                 var user = result.user.toJSON();
-
                 return user
             })
-            .then(async (user) => {
+            .then((user) => {
                 console.log(user)
-
                 const uid = firebase.auth().currentUser.uid
                 this.props.updateUser(user)
                 //pushing data in registration
                 firebase.database().ref("/Registration/").once("value", snapshot => {
                     if (snapshot.hasChild(uid)) {
+                        console.log('han')
                         //checking if the user already exist. if yes get to dashboard
                         this.props.history.replace(`/profile/dashboard/${uid}`)
                         //for rending AppBar use loginStateFunction
                         this.props.loginStateFunction()
                     }
                     else {
+                        console.log('nahi')
                         //if user is not in registration get him to profile
                         this.props.history.replace("/profile")
                         this.props.loginStateFunction()

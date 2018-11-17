@@ -139,8 +139,7 @@ class Locations extends Component {
     }
 
     getUsersData() {
-        // const uid = firebase.auth().currentUser.uid
-        const uid = "K9DwEyp0KRUxofHRaVh17OViU9w2"
+        const uid = firebase.auth().currentUser.uid
         const { coords } = this.state
 
         firebase.database().ref("/").child(`Registration/${uid}/`).once("value", async data => {

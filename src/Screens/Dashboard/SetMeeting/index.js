@@ -33,6 +33,8 @@ import { updateUser } from "../../../Redux/Action/authAction"
 //dialogbox
 // import DialogBox from "../../../Components/DialogBox/DialogBox"
 
+//appBar 
+
 //sweetAlert2
 import swal from "sweetalert2";
 
@@ -70,7 +72,7 @@ class SetMeeting extends Component {
     }
 
     getUsersData() {
-        // const uid = firebase.auth().currentUser.uid;
+        const uid = firebase.auth().currentUser.uid;
         const arr = [];
         firebase.database().ref(`Registration/`).on("child_added", async data => {
             const { allUsers } = this.state
@@ -96,9 +98,9 @@ class SetMeeting extends Component {
         })
     }
 
-    componentWillUnmount() {
-        firebase.database().ref(`Registration/`).off();
-    }
+    // componentWillUnmount() {
+    //     firebase.database().ref(`Registration/`).off();
+    // }
 
     action(items) {
         // console.log("duck", items)

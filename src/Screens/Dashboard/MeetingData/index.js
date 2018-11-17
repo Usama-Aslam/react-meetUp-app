@@ -112,7 +112,8 @@ class MeetingData extends Component {
 
     async getData() {
         console.log("this props of get data", this.props)
-        const uid = "K9DwEyp0KRUxofHRaVh17OViU9w2"
+        // const uid = "K9DwEyp0KRUxofHRaVh17OViU9w2"
+        const uid = firebase.auth().currentUser.uid;
         let Ref = firebase.database().ref(`Data/${uid}/meeting`)
         let arr = []
         let newArr = []
@@ -174,12 +175,12 @@ class MeetingData extends Component {
             meetingNodes: newArr,
         })
     }
-    componentWillUnmount() {
-        // const uid = firebase.auth().currentUser.uid
-        const uid = "K9DwEyp0KRUxofHRaVh17OViU9w2"
-        let Ref = firebase.database().ref(`Data/${uid}/meeting`)
-        Ref.off();
-    }
+    // componentWillUnmount() {
+    //     // const uid = firebase.auth().currentUser.uid
+    //     const uid = "K9DwEyp0KRUxofHRaVh17OViU9w2"
+    //     let Ref = firebase.database().ref(`Data/${uid}/meeting`)
+    //     Ref.off();
+    // }
 
     handleModelOpen = () => {
         this.setState({ open: true });
@@ -206,24 +207,9 @@ class MeetingData extends Component {
         console.log(desLocation, myLocation)
     }
 
-    // noti() {
-    //     const uid = "K9DwEyp0KRUxofHRaVh17OViU9w2";
-    //     firebase.database().ref(`Data/${uid}/meeting`).on("child_added", data => {
-    //         if (Notification.permission !== 'default') {
-    //             let notify;
-    //             notify = new Notification('CodeWife', {
-    //                 'body': "kia hal hai",
-    //                 'icon': logo,
-    //                 'tag': "dkfsdkl"
-    //             });
-    //         } else {
-    //             alert("please alow notification")
-    //         }
-    //     })
-    // }
-
     setInvitation(clientUid, userUid, key, index, status) {
         const { meetingNodes } = this.state
+        const uid = firebase.auth().currentUser.uid
         firebase.database().ref("/").child(`Data/${userUid}/meeting/${clientUid}/${key}`).remove();
         // firebase.database().ref("/").child(`Data/${userUid}/meeting/${clientUid}/${key}/statuses`).set(status);
         // delete meetingNodes[index]

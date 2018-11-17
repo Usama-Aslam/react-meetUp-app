@@ -74,22 +74,8 @@ class FullWidthTabs extends React.Component {
         })
     }
 
-    // checkNotification() {
-    //     if (!window.Notification) {
-    //         alert("notification not supported")
-    //     } else {
-    //         Notification.requestPermission().then(function (p) {
-    //             if (p == 'denied') {
-    //                 alert('you denied to show Notification');
-    //             } else if (p == 'granted') {
-    //                 alert("permission granted")
-    //             }
-    //         })
-    //     }
-    // }
-
     render() {
-        // this.checkNotification()
+    
         const { classes, theme } = this.props;
         const { meetingDeck } = this.state
         console.log("dashmenu props", this.props)

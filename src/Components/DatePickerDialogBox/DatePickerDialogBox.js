@@ -52,7 +52,7 @@ class DatePickerDialogBox extends React.Component {
         const { date, currentUserData } = this.state
         const { destination, usersInfo, address, meetingPlace, user } = this.props
         const clientUid = usersInfo.uid;
-        console.log("destination",destination)
+        console.log("destination", destination)
         console.log("meetingplace address", meetingPlace, address)
 
         console.log("thisdata", currentUserData.displayName)
@@ -67,7 +67,7 @@ class DatePickerDialogBox extends React.Component {
             myLocation: { lat: currentUserData.location.lat, lng: currentUserData.location.lng },
             destinationLocation: { lat: destination.latitude, lng: destination.longitude },
             destinationDescription: { meetingPlace, address },
-            statuses: "pending"
+            statuses: "Pending"
         }
         //obj for receiving person
         let receiveObj = {
@@ -80,7 +80,7 @@ class DatePickerDialogBox extends React.Component {
             myLocation: { lat: usersInfo.location.lat, lng: usersInfo.location.lng },
             destinationLocation: { lat: destination.latitude, lng: destination.longitude },
             destinationDescription: { meetingPlace, address },
-            statuses: "pending"
+            statuses: "Pending"
         }
         pushMeetingData(sendObj, receiveObj, currentUserUid, clientUid)
             .then((flag) => {
@@ -100,13 +100,14 @@ class DatePickerDialogBox extends React.Component {
     onChange = date => {
         this.setState({ date })
     }
-    componentWillUnmount(){
+    componentWillUnmount() {
         firebase.database().ref("/").off()
     }
 
     render() {
         const { usersInfo, classes, address, meetingPlace } = this.props
         console.log("dateprops", this.props)
+        console.log("usersInfo dekho", usersInfo)
         return (
             <div className="meetingTimeDiv">
                 <Typography variant="h5" component="h2">
@@ -119,11 +120,11 @@ class DatePickerDialogBox extends React.Component {
                 <div className="contentDiv">
                     <Typography component="p">
                         <strong>Client Name : </strong>
-                        Muhammad Usama
+                        {usersInfo.displayName}
                     </Typography>
                     <Typography component="p">
                         <strong>Phone No: </strong>
-                        3213121231
+                        {usersInfo.phone}
                     </Typography>
                     <Typography component="p">
                         <strong>Place: </strong>

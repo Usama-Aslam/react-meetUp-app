@@ -109,8 +109,8 @@ class RequestData extends Component {
     }
 
     getData() {
-        // const uid = firebase.auth().currentUser.uid
-        const uid = "K9DwEyp0KRUxofHRaVh17OViU9w2"
+        const uid = firebase.auth().currentUser.uid
+        // const uid = "K9DwEyp0KRUxofHRaVh17OViU9w2"
         let Ref = firebase.database().ref(`Data/${uid}/request`)
 
         Ref.on("child_added", data => {
@@ -133,12 +133,12 @@ class RequestData extends Component {
             }
         })
     }
-    componentWillUnmount() {
-        // const uid = firebase.auth().currentUser.uid
-        const uid = "K9DwEyp0KRUxofHRaVh17OViU9w2"
-        let Ref = firebase.database().ref(`Data/${uid}/request`)
-        Ref.off('child_added')
-    }
+    // componentWillUnmount() {
+    //     // const uid = firebase.auth().currentUser.uid
+    //     const uid = "K9DwEyp0KRUxofHRaVh17OViU9w2"
+    //     let Ref = firebase.database().ref(`Data/${uid}/request`)
+    //     Ref.off('child_added')
+    // }
 
     handleModelOpen = () => {
         this.setState({ open: true });
@@ -150,18 +150,18 @@ class RequestData extends Component {
 
     getNavigation(desLocation, myLocation) {
 
-        // this.state.destination.latitude = desLocation.lat
-        // this.state.destination.longitude = desLocation.lng
+        this.state.destination.latitude = desLocation.lat
+        this.state.destination.longitude = desLocation.lng
 
-        // this.state.coords.latitude = myLocation.lat
-        // this.state.coords.longitude = myLocation.lng
+        this.state.coords.latitude = myLocation.lat
+        this.state.coords.longitude = myLocation.lng
 
-        // this.setState({
-        //     destination: this.state.destination,
-        //     coords: this.state.coords,
-        //     open: true
-        // })
-        console.log(desLocation)
+        this.setState({
+            destination: this.state.destination,
+            coords: this.state.coords,
+            open: true
+        })
+        console.log(desLocation, myLocation)
     }
 
     setInvitation(clientUid, userUid, key, index, status) {
@@ -228,7 +228,7 @@ class RequestData extends Component {
                                         <div className={classNames("locationNavigation_div")}>
                                             <Button size="small"
                                                 onClick={() => {
-                                                    this.getNavigation(items.destinationLocation, items.mylocation)
+                                                    this.getNavigation(items.destinationLocation, items.myLocation)
                                                 }}
                                             >Direction</Button>
                                         </div>

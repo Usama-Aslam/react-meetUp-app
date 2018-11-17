@@ -66,10 +66,9 @@ class SwipeableTemporaryDrawer extends React.Component {
 
     render() {
         const { classes, user } = this.props;
-
+        console.log("routing of side", this.props)
         const sideList = (
             <div className={classes.list}>
-
                 <CardActionArea>
                     <Avatar alt="Remy Sharp" src={user.photoURL} className="sideBar_avatar" />
                     <CardMedia

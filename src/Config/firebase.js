@@ -4,12 +4,12 @@ import * as firebase from 'firebase'
 import swal from 'sweetalert2'
 
 var config = {
-    apiKey: "AIzaSyBrT1tgitCyiTJ5lwxMFIfsaoXjmL09-fQ",
-    authDomain: "reactmeetup-pk.firebaseapp.com",
-    databaseURL: "https://reactmeetup-pk.firebaseio.com",
-    projectId: "reactmeetup-pk",
-    storageBucket: "reactmeetup-pk.appspot.com",
-    messagingSenderId: "130657948638"
+    apiKey: "AIzaSyAI2BdHq0THMGB-K2LNLVztV42wCOD390o",
+    authDomain: "react-meetup-app.firebaseapp.com",
+    databaseURL: "https://react-meetup-app.firebaseio.com",
+    projectId: "react-meetup-app",
+    storageBucket: "gs://react-meetup-app.appspot.com",
+    messagingSenderId: "809547878890"
 };
 
 
@@ -58,6 +58,18 @@ const getUsersData = () => {
     })
 }
 
+const firebaseLogout = () => {
+    return firebase.auth().signOut()
+        .then(() => {
+            console.log("userSigned Out")
+            toast({
+                type: 'success',
+                title: 'SignOut Successfully'
+            })
+            return true
+        })
+}
+
 const getSpecificUsersData = (uid) => {
     // const uid = firebase.auth().currentUser.uid;
     return firebase.database().ref(`Registration/${uid}`).once("value", data => {
@@ -99,16 +111,65 @@ const pushMeetingData = async (sendObj, receiveObj, currentUserUid, clientUid) =
 }
 
 const checkAuth = () => {
-    firebase.auth().onAuthStateChanged((user) => {
-        if (user) {
-            console.log("currentUser Present")
-        }
-        else {
-            //toast
-            console.log("CurrentUser is not Present")
-            this.props.history.replace("/")
-        }
+    return firebase.auth().onAuthStateChanged((user) => {
+        return "balls"
+        // if (user) {
+        //     console.log("currentUser Present")
+        //     return true
+        // }
+        // else {
+        //     //toast
+        //     console.log("CurrentUser is not Present")
+        //     this.props.history.replace("/")
+        //     return false
+        // }
     })
+}
+
+const firebaseFacebookLogin = (props) => {
+    console.log('firebse props', props)
+    var provider = new firebase.auth.FacebookAuthProvider();
+    provider.setCustomParameters({
+        'display': 'popup'
+    });
+    firebase.auth().signInWithPopup(provider)
+        .then(function (result) {
+            // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+            var token = result.credential.accessToken;
+            // The signed-in user info.
+            var user = result.user.toJSON();
+            return user
+        })
+        .then((user) => {
+            console.log(user)
+            const uid = firebase.auth().currentUser.uid
+            props.updateUser(user)
+            //pushing data in registration
+            firebase.database().ref("/Registration/").once("value", snapshot => {
+                if (snapshot.hasChild(uid)) {
+                    console.log('han')
+                    //checking if the user already exist. if yes get to dashboard
+                    props.history.replace(`/profile/dashboard/${uid}`)
+                }
+                else {
+                    console.log('nahi')
+                    //if user is not in registration get him to profile
+                    props.history.replace("/profile")
+                }
+            })
+        })
+        .catch((e) => {
+            // // Handle Errors here.
+            // var errorCode = error.code;
+            // var errorMessage = error.message;
+            // // The email of the user's account used.
+            // var email = error.email;
+            // // The firebase.auth.AuthCredential type that was used.
+            // var credential = error.credential;
+            // ...
+
+            console.log(e)
+        });
 }
 export {
     firebase,
@@ -117,6 +178,6 @@ export {
     checkAuth,
     getSpecificUsersData,
     pushMeetingData,
-    // initFirebase
-    // getMeetingData
+    firebaseLogout,
+    firebaseFacebookLogin
 }
