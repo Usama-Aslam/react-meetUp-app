@@ -1,4 +1,4 @@
-import { firebase, getUsersData, pushData } from '../../../Config/firebase'
+import { firebase, getUsersData, pushData, getSpecificUsersData } from '../../../Config/firebase'
 import React, { Component } from 'react';
 import { Typography } from '@material-ui/core';
 
@@ -73,11 +73,47 @@ class SetMeeting extends Component {
 
     getUsersData() {
         const uid = firebase.auth().currentUser.uid;
-        const arr = [];
+        // let arr = [];
+
+        // const uid = "LsXOM3horCOTNgGhRtKDQjZ7AcE2";
+        // getSpecificUsersData("LsXOM3horCOTNgGhRtKDQjZ7AcE2").then((data) => {
+        //     this.setState({
+        //         myData: data.val()
+        //     })
+        // }).then(() => {
+        //     const { myData } = this.state
+        //     firebase.database().ref(`Registration/`).on("child_added", async snapshot => {
+        //         let obj = snapshot.val();
+        //         let key = snapshot.key;
+        //         if ((key != myData.uid) && (myData.duration.filter(dur => obj.duration.indexOf(dur)))) {
+
+        //         }
+        //     })
+        // })
+
         firebase.database().ref(`Registration/`).on("child_added", async data => {
-            const { allUsers } = this.state
-            allUsers.push(data.val())
+
+            const { allUsers } = this.state;
+
+            let obj = data.val();
+            // let key = data.key;
+            // if (key != uid && obj.key) {
+            //     console.log(key)
+            //     arr.push(obj)
+            // }
+            // console.log(arr)
+            // arr.push(obj)
+            // key.push(obj.key)
+
+            allUsers.push(obj)
             this.setState({ allUsers: this.state.allUsers })
+
+
+            // this.setState({ allUsers: this.state.allUsers })
+
+            // console.log('keys', data.key)
+            // allUsers.push(data.val())
+            // this.setState({ allUsers: this.state.allUsers })
             // let obj = data.val();
             // let key = data.key;
             // let currentKey = firebase.auth().currentUser.uid;
@@ -85,6 +121,7 @@ class SetMeeting extends Component {
             //     arr.push(obj)
             // }
         })
+        // console.log(arr)
         // console.log("fetching data-----array", arr)
         // this.setState({
         //     allUsers: arr

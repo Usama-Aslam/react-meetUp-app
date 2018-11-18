@@ -78,7 +78,7 @@ class Steps2 extends Component {
         uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
             console.log('File available at', downloadURL);
             updateImageUrl(downloadURL, fileN)
-            document.getElementById(e.target.id).disabled = false
+            // document.getElementById(e.target.id).disabled = false
         });
     }
 

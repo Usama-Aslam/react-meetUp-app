@@ -107,73 +107,54 @@ class MeetingData extends Component {
             // }],
         }
         this.getNavigation = this.getNavigation.bind(this)
-        this.getData();
     }
 
+    componentDidMount(){
+        this.getData()
+    }
     async getData() {
         console.log("this props of get data", this.props)
-        // const uid = "K9DwEyp0KRUxofHRaVh17OViU9w2"
+        let { meetingNodes, allMeetingData } = this.state;
+
+        // const uid = "LsXOM3horCOTNgGhRtKDQjZ7AcE2"
         const uid = firebase.auth().currentUser.uid;
         let Ref = firebase.database().ref(`Data/${uid}/meeting`)
         let arr = []
-        let newArr = []
-        await Ref.on("child_added", async data => {
-            const { allMeetingData, meetingNodes } = this.state;
-            let obj = data.val()
-            // arr.push(data.val())
-            arr.push(data.val())
-            for (const key in arr) {
-                for (const keys in arr[key]) {
-                    newArr.push(arr[key][keys])
-                    this.state.keys.push(keys)
-                    this.setState({
-                        keys: this.state.keys
-                    })
+        // let newArr = []
+        
+
+        await Ref.on("value", async data => {
+            meetingNodes = [];
+            console.log('on value', data.val())
+            let obj = data.val();
+            for (const key in obj) {
+                for (const keys in obj[key]) {
+                    console.log(obj[key][keys])
+                    meetingNodes.push(obj[key][keys])
                 }
             }
-            // firebase.database().ref().child('Data').orderByChild('statuses').on("child_changed", snap => {
-            //     let status = document.getElementById(snap.key);
-            //     status.innerHTML = snap.val()
-            // })
-
-            // await Ref.on("child_added", async data => {
-            //     const { allMeetingData, meetingNodes } = this.state;
-            //     let obj = data.val()
-            //     // arr.push(data.val())
-            //     arr.push(data.val())
-
-            //     for (const key in arr) {
-            //         for (const keys in arr[key]) {
-            //             newArr.push(arr[key][keys])
-            //             this.state.keys.push(keys)
-            //             this.setState({
-            //                 keys: this.state.keys
-            //             })
-            //         }
-            //     }
-            // allMeetingData.push(data.val())
-            // this.setState({
-            //     allMeetingData: this.state.allMeetingData
-            // })
-            // for (const key in allMeetingData) {
-            //     for (const keys in allMeetingData[key]) {
-            //         this.state.meetingNodes.push(allMeetingData[key][keys])
+            this.setState({
+                meetingNodes
+            })
+            // arr.push(data.val())
+            // for (const key in arr) {
+            //     for (const keys in arr[key]) {
+            //         newArr.push(arr[key][keys])
             //         this.state.keys.push(keys)
             //         this.setState({
-            //             meetingNodes: this.state.meetingNodes,
             //             keys: this.state.keys
             //         })
             //     }
             // }
         })
-        console.log("arr", arr);
-        console.log('newArr', newArr);
-        this.state.allMeetingData = arr;
-        this.state.meetingNodes = newArr;
-        this.setState({
-            allMeetingData: arr,
-            meetingNodes: newArr,
-        })
+        // console.log("arr", arr);
+        // console.log('newArr', newArr);
+        // this.state.allMeetingData = arr;
+        // this.state.meetingNodes = newArr;
+        // this.setState({
+        //     allMeetingData: arr,
+        //     meetingNodes: newArr,
+        // })
     }
     // componentWillUnmount() {
     //     // const uid = firebase.auth().currentUser.uid
@@ -225,7 +206,7 @@ class MeetingData extends Component {
         const { allMeetingData, meetingNodes, destination, coords, keys } = this.state
         // console.log("allMeeting", allMeetingData)
         console.log("props", this.props.user)
-        console.log("nods", meetingNodes)
+        console.log("nodsssss", meetingNodes)
         return (
             <div>
                 {meetingNodes.length == 0 ?

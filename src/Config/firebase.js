@@ -45,7 +45,7 @@ const pushData = (obj) => {
 const toast = swal.mixin({
     toast: true,
     position: 'top-end',
-    showConfirmButton: true,
+    showConfirmButton: false,
     timer: 3000
 });
 
@@ -167,7 +167,6 @@ const firebaseFacebookLogin = (props) => {
             // // The firebase.auth.AuthCredential type that was used.
             // var credential = error.credential;
             // ...
-
             console.log(e)
         });
 }

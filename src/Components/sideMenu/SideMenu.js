@@ -45,7 +45,7 @@ const styles = {
         maxWidth: 345,
     },
     media: {
-        height: 80,
+        height: 150,
     },
     row: {
         display: 'flex',
@@ -56,6 +56,7 @@ const styles = {
 class SwipeableTemporaryDrawer extends React.Component {
     state = {
         left: false,
+        coverPhoto: 'https://image.freepik.com/vetores-gratis/quadrados-brancos-verdes-e-azuis-modernos-fundo-abstrato-para-design-de-folhetos-folhetos-ou-apresentacoes_1302-5338.jpg'
     };
 
     toggleDrawer = (side, open) => () => {
@@ -66,6 +67,7 @@ class SwipeableTemporaryDrawer extends React.Component {
 
     render() {
         const { classes, user } = this.props;
+        const { coverPhoto } = this.state
         console.log("routing of side", this.props)
         const sideList = (
             <div className={classes.list}>
@@ -73,18 +75,19 @@ class SwipeableTemporaryDrawer extends React.Component {
                     <Avatar alt="Remy Sharp" src={user.photoURL} className="sideBar_avatar" />
                     <CardMedia
                         className={classes.media}
-                        image=""
+                        image={coverPhoto}
                         title=""
-                    />
-                    <CardContent>
-                        <Typography component="p" className="user_nickName">
-                            {user.displayName}
-                        </Typography>
+                    >
+                        <CardContent className='cardContent'>
+                            <Typography component="p" className="user_nickName">
+                                {user.displayName}
+                            </Typography>
 
-                        <Typography component="p" className="user_email">
-                            {user.email}
-                        </Typography>
-                    </CardContent>
+                            <Typography component="p" className="user_email">
+                                {user.email}
+                            </Typography>
+                        </CardContent>
+                    </CardMedia>
                 </CardActionArea>
 
                 <List>

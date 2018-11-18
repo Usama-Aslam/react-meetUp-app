@@ -24,6 +24,8 @@ import logo from '../../../logo.svg';
 
 import Modal from '../../../Components/Models/Models'
 
+//AddCalender library
+import AddToCalendar from 'react-add-to-calendar'
 
 // //redux
 import { connect } from "react-redux"
@@ -108,29 +110,30 @@ class RequestData extends Component {
         this.getData();
     }
 
-    getData() {
-        const uid = firebase.auth().currentUser.uid
-        // const uid = "K9DwEyp0KRUxofHRaVh17OViU9w2"
-        let Ref = firebase.database().ref(`Data/${uid}/request`)
+    async  getData() {
+        console.log("this props of get data", this.props)
+        let { requestNodes, allRequestData } = this.state;
 
-        Ref.on("child_added", data => {
-            const { allRequestData, requestNodes } = this.state;
-            let obj = data.val()
-            // arr.push(data.val())
-            allRequestData.push(data.val())
-            this.setState({
-                allRequestData: this.state.allRequestData
-            })
-            for (const key in allRequestData) {
-                for (const keys in allRequestData[key]) {
-                    this.state.requestNodes.push(allRequestData[key][keys])
-                    this.state.keys.push(keys)
-                    this.setState({
-                        requestNodes: this.state.requestNodes,
-                        keys: this.state.keys
-                    })
+        // const uid = "LsXOM3horCOTNgGhRtKDQjZ7AcE2"
+        const uid = firebase.auth().currentUser.uid;
+        let Ref = firebase.database().ref(`Data/${uid}/request`)
+        let arr = []
+        // let newArr = []
+
+
+        await Ref.on("value", async data => {
+            requestNodes = [];
+            console.log('on value', data.val())
+            let obj = data.val();
+            for (const key in obj) {
+                for (const keys in obj[key]) {
+                    console.log(obj[key][keys])
+                    requestNodes.push(obj[key][keys])
                 }
             }
+            this.setState({
+                requestNodes
+            })
         })
     }
     // componentWillUnmount() {
@@ -165,11 +168,11 @@ class RequestData extends Component {
     }
 
     setInvitation(clientUid, userUid, key, index, status) {
-        const { meetingNodes } = this.state
+        const { requestNodes } = this.state
         firebase.database().ref("/").child(`Data/${userUid}/meeting/${clientUid}/${key}/statuses`).set(status);
-        // delete meetingNodes[index]
+        // delete requestNodes[index]
         // this.setState({
-        //     meetingNodes: this.state.meetingNodes
+        //     requestNodes: this.state.requestNodes
         // })
     }
 
@@ -208,11 +211,11 @@ class RequestData extends Component {
                                         </div>
 
                                         <div className={classNames('place_div')}>
-                                            <Typography className={classes.secondaryHeading} variant="h5" component="h3">{items.destinationDescription.meetingPlace}</Typography>
+                                            <Typography className={classes.secondaryHeading} variant="h5" component="h3"><span>{items.destinationDescription.meetingPlace}</span></Typography>
                                         </div>
 
                                         <div className={classNames('status_div')}>
-                                            <Typography className={classes.secondaryHeading} variant="h6" component="h6"><strong>Status : </strong>pending</Typography>
+                                            <Typography className={classes.secondaryHeading} variant="h6" component="h6" id={keys[index]}><span>{items.statuses}</span></Typography>
                                         </div>
                                     </ExpansionPanelSummary>
 
@@ -236,11 +239,25 @@ class RequestData extends Component {
                                     <Divider />
                                     <ExpansionPanelActions>
                                         <Divider />
-                                        <Button size="small"
+                                        <AddToCalendar
+                                            event={{
+                                                title: `Meeting with ${items.clientName}`,
+                                                description: `Today is Your Meeting With ${items.clientName} At ${items.destinationDescription.meetingPlace}`,
+                                                location: `${items.destinationDescription.address}`,
+                                                startTime: new Date(items.date[1]).toLocaleDateString(),
+                                                endTime: new Date(items.date[1]).toLocaleDateString()
+
+                                            }}
+
+                                            listItems={[
+                                                { google: 'Google' }
+                                            ]}
+                                        />
+                                        {/* <Button size="small"
                                             onClick={() => {
                                                 this.setInvitation(items.clientUid, items.userUid, keys[index], index, "Cancelled")
                                             }}
-                                        >Cancel</Button>
+                                        >Cancel</Button> */}
                                         {/* <Button
                                             size="small"
                                             color="primary"

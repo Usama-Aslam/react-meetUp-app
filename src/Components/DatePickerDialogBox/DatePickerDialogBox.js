@@ -82,6 +82,7 @@ class DatePickerDialogBox extends React.Component {
             destinationDescription: { meetingPlace, address },
             statuses: "Pending"
         }
+
         pushMeetingData(sendObj, receiveObj, currentUserUid, clientUid)
             .then((flag) => {
                 if (flag) {
@@ -89,6 +90,7 @@ class DatePickerDialogBox extends React.Component {
                     this.props.history.replace(`/profile/dashboard/${uid}`)
                 }
             })
+        
     };
 
     //to get back to searching location

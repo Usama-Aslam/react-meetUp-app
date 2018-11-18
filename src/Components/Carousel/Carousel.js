@@ -86,7 +86,7 @@ class SwipeableTextMobileStepper extends React.Component {
         const { classes, theme, usersImage } = this.props;
         const { activeStep } = this.state;
         const maxSteps = usersImage.length;
-        console.log("usersImgage", usersImage)
+        // console.log("usersImgage", usersImage)
 
         return (
             <div className={classes.root}>
